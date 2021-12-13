@@ -1,0 +1,20 @@
+SManager:
+    MainMenu:
+
+
+<MainMenu>
+    name: 'MainMenu'
+    FloatLayout:
+        Spinner:
+            id:languages
+            size_hint:(0.15,0.1)
+            pos_hint:{'right':0.98,'center_y':0.98}
+            text:'Language'
+            values:'English - en','język polski - pl','русския язык - ru'
+            on_text: app.change_language(languages.text)
+        MDLabel:
+            id:apptitle
+            text:app.language_strings['app_name'][app.settings['language']]
+            size_hint:(0.7,0.1)
+            pos_hint:{'center_x':0.5,'center_y':0.98}
+            halign:'center'
