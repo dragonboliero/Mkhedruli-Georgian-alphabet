@@ -1,20 +1,170 @@
 SManager:
     MainMenu:
 
+#Values for buttons inside of Spinner
+<SpinnerOption>
+    text_size:self.width,None
+    halign:'center'
+#Top bar for all menus    
+<TopPanel>
+    cols:2
+    size_hint_y:0.10
+    pos_hint:{'center_y':0.951}
+
+
 
 <MainMenu>
     name: 'MainMenu'
-    FloatLayout:
-        Spinner:
-            id:languages
-            size_hint:(0.15,0.1)
-            pos_hint:{'right':0.98,'center_y':0.98}
-            text:'Language'
-            values:'English - en','język polski - pl','русския язык - ru'
-            on_text: app.change_language(languages.text)
-        MDLabel:
-            id:apptitle
-            text:app.language_strings['app_name'][app.settings['language']]
-            size_hint:(0.7,0.1)
-            pos_hint:{'center_x':0.5,'center_y':0.98}
-            halign:'center'
+    MDBottomNavigation:
+        #Letter learning screen
+        MDBottomNavigationItem:
+            name:'letters'
+            icon:'alphabetical'
+            TopPanel:
+                #App name string
+                MDLabel:
+                    id:apptitle
+                    text:app.language_strings['app_name'][app.settings['language']]
+                    size_hint:(0.9,0.1)
+                    pos_hint:{'center_x':0.5,'center_y':0.98}
+                    halign:'center'
+                #Dropdown list with available languages
+                Spinner:
+                    id:languages
+                    size_hint:(0.2,0.1)
+                    pos_hint:{'right':0.98,'center_y':0.98}
+                    text:'Language'
+                    text_size: self.width, None
+                    halign:'center'
+                    values:'English - en','język polski - pl','русския язык - ru'
+                    on_text: app.change_language(languages.text)
+
+            #Layout holding elements other than topbar
+            BoxLayout:
+                orientation:'vertical'
+                size_hint_y:0.8
+                BoxLayout:
+                    size_hint_y:0.2
+
+                #Card displaying random Georgian letter
+                MDCard:
+                    size_hint:(0.35,0.15)
+                    pos_hint_y: 0.3
+                    halign:'center'
+                    md_bg_color: (0.2,0.1,1,1)
+                    pos_hint:{'center_x':0.5}
+                    radius: [dp(20),dp(20),dp(20),dp(20)]
+                    spacing:"56dp"
+                    MDLabel:
+                        id: geo_letter
+                        text:'geo'
+                        halign:'center'
+                        #Not included in the repo
+                        #Georgian fonts can be found at:
+                        #https://fonts.google.com/
+                        font_name:'../geo_font.ttf'
+                BoxLayout:
+                    size_hint_y:0.15 
+                    #Just a placeholder button for testing purposes
+                    #To be removed after implementing functionality
+                    #to random letter buttons
+                    MDIconButton:
+                        icon:'arrow-right-thick'
+                        on_release:app.pick_georgian_letter()
+
+                #Layout storing 4 cards, 3 with random letters 
+                #and one with correct answer.
+                #BoxLayouts are just spacers.
+                GridLayout:
+                    cols:9
+                    size_hint_y: 0.07
+                    BoxLayout:
+                        size_hint_x:0.01
+
+                    #1st letter
+                    MDCard:
+                        size_hint:(0.2,0.2)
+                        halign:'center'
+                        md_bg_color: (0.2,0.1,1,1)
+                        pos_hint:{'center_x':0.5}
+                        radius: [dp(20),dp(20),dp(20),dp(20)]
+                        spacing: dp(20)
+                        MDLabel:
+                            text:'asd'
+                            halign:'center'
+
+                    BoxLayout:
+                        size_hint_x: 0.02
+
+                    #Second Letter
+                    MDCard:
+                        size_hint:(0.2,0.4)
+                        halign:'center'
+                        md_bg_color: (0.2,0.1,1,1)
+                        pos_hint:{'center_x':0.5}
+                        radius: [dp(20),dp(20),dp(20),dp(20)]
+                        padding: 16
+                        MDLabel:
+                            text:'b'
+                            halign:'center'
+
+                    BoxLayout:
+                        size_hint_x: 0.02
+                    
+                    #3rd letter
+                    MDCard:
+                        size_hint:(0.2,0.4)
+                        halign:'center'
+                        md_bg_color: (0.2,0.1,1,1)
+                        pos_hint:{'center_x':0.5}
+                        radius: [dp(20),dp(20),dp(20),dp(20)]
+                        padding: 16
+                        MDLabel:
+                            text:'c'
+                            halign:'center'
+                    
+                    BoxLayout:
+                        size_hint_x: 0.02
+
+                    #4th letter                
+                    MDCard:
+                        size_hint:(0.2,0.4)
+                        halign:'center'
+                        md_bg_color: (0.2,0.1,1,1)
+                        pos_hint:{'center_x':0.5}
+                        radius: [dp(20),dp(20),dp(20),dp(20)]
+                        padding: 16
+                        MDLabel:
+                            text:'d'
+                            halign:'center'
+
+                    BoxLayout:
+                        size_hint_x: 0.01
+
+                #Making space between random letters and bottom navbar        
+                BoxLayout:
+                    size_hint_y:0.03
+                    
+        #Time attack screen
+        MDBottomNavigationItem:
+            name:'time-attack'
+            icon:'clock'
+        #Words learning screen
+        MDBottomNavigationItem:
+            name:'words'
+            icon:'text-box-outline'
+        #Screen with history of Georgian alphabets
+        MDBottomNavigationItem:
+            name:'history'
+            icon:'book-open-blank-variant'
+        #Settings screen
+        MDBottomNavigationItem:
+            name:'settings'
+            icon:'cog-outline'
+        #Achievements screen
+        MDBottomNavigationItem:
+            name:'achievements'
+            icon:'trophy-outline'
+    
+
+        
