@@ -33,11 +33,11 @@ SManager:
                     id:languages
                     size_hint:(0.2,0.1)
                     pos_hint:{'right':0.98,'center_y':0.98}
-                    text:'Language'
+                    text:app.current_lng
                     text_size: self.width, None
                     halign:'center'
                     values:'English - en','język polski - pl','русския язык - ru'
-                    on_text: app.change_language(languages.text)
+                    on_text: app.change_language(languages.text);app.save_settings()
 
             #Layout holding elements other than topbar
             BoxLayout:
@@ -89,7 +89,9 @@ SManager:
                         pos_hint:{'center_x':0.5}
                         radius: [dp(20),dp(20),dp(20),dp(20)]
                         spacing: dp(20)
+                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.first_card_text.text)
                         MDLabel:
+                            id:first_card_text
                             text:app.first_correct_answer
                             halign:'center'
 
@@ -98,13 +100,16 @@ SManager:
 
                     #Second Letter
                     MDCard:
+                        id:first_card
                         size_hint:(0.2,0.4)
                         halign:'center'
                         md_bg_color: (0.2,0.1,1,1)
                         pos_hint:{'center_x':0.5}
                         radius: [dp(20),dp(20),dp(20),dp(20)]
                         padding: 16
+                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.second_card_text.text)
                         MDLabel:
+                            id:second_card_text
                             text:app.first_random_letters[0]
                             halign:'center'
 
@@ -119,7 +124,9 @@ SManager:
                         pos_hint:{'center_x':0.5}
                         radius: [dp(20),dp(20),dp(20),dp(20)]
                         padding: 16
+                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.third_card_text.text)
                         MDLabel:
+                            id:third_card_text
                             text:app.first_random_letters[1]
                             halign:'center'
                     
@@ -134,7 +141,9 @@ SManager:
                         pos_hint:{'center_x':0.5}
                         radius: [dp(20),dp(20),dp(20),dp(20)]
                         padding: 16
+                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.fourth_card_text.text)
                         MDLabel:
+                            id:fourth_card_text
                             text:app.first_random_letters[2]
                             halign:'center'
 

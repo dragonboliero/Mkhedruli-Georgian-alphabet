@@ -57,6 +57,7 @@ class TopPanel(GridLayout):
 class Mkhedruli(MDApp):
     def build(self):    
         self.settings = load_settings
+        self.current_lng = self.settings['language']
         self.language_strings = load_strings
         self.first_geo_letter = random.choice(list(georgian_letters_dict))
         self.first_correct_answer = georgian_letters_dict[self.first_geo_letter][self.settings['language']]
@@ -72,6 +73,45 @@ class Mkhedruli(MDApp):
 
     #Function for picking random Georgian letter in letter learning mode
     def pick_georgian_letter(self):
+        #Get random Georgian letter to guess
         self.root.get_screen('MainMenu').ids.geo_letter.text = random.choice(list(georgian_letters_dict))
+        #Associate Georgian letter with user native lng letter
+        new_correct_letter = georgian_letters_dict[self.root.get_screen('MainMenu').ids.geo_letter.text][self.settings['language']]
+        #Choose three random letters for other MDCards
+        new_random_letters = [random.choice(list(georgian_letters_dict.keys())) for letter in range(3)]
+        new_random_letters = [georgian_letters_dict[new_random_letters[current_choice]][self.settings['language']] for current_choice in range(3)]
+        #Add correct answer to the same array
+        new_random_letters.append(new_correct_letter)
+        
+        #Pick random letter from the array and then associate it with all MDCards
+        random_to_add = random.choice(new_random_letters)
+        self.root.get_screen('MainMenu').ids.first_card_text.text = random_to_add
+        new_random_letters.remove(random_to_add)
+
+        random_to_add = random.choice(new_random_letters)
+        self.root.get_screen('MainMenu').ids.second_card_text.text = random_to_add
+        new_random_letters.remove(random_to_add)
+
+        random_to_add = random.choice(new_random_letters)
+        self.root.get_screen('MainMenu').ids.third_card_text.text = random_to_add
+        new_random_letters.remove(random_to_add)
+
+        random_to_add = random.choice(new_random_letters)
+        self.root.get_screen('MainMenu').ids.fourth_card_text.text = random_to_add
+        new_random_letters.remove(random_to_add)
+
+    #Checks if user answer is correct
+    def check_answer(self,geo_letter,answer):
+        if answer == georgian_letters_dict[geo_letter][self.settings['language']]:
+            print('well done')
+        else:
+            print('bad answer')
+
+    #Save settings to the file
+    def save_settings(self):
+        with open('data/settings.csv','w') as settings_file:
+            for key,value in self.settings.items():
+                settings_value = f'{key},{value}\n'
+                settings_file.write(settings_value)
 
 Mkhedruli().run()
