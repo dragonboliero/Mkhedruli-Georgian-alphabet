@@ -108,10 +108,10 @@ class Mkhedruli(MDApp):
             print('bad answer')
 
     #Save settings to the file
-    def save_settings(self):
+    def save_settings(self,screen):
         with open('data/settings.csv','w') as settings_file:
             for key,value in self.settings.items():
                 settings_value = f'{key},{value}\n'
-                settings_file.write(settings_value)
+                settings_file.write(settings_value)        
 
 Mkhedruli().run()

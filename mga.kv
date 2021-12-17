@@ -1,6 +1,6 @@
 SManager:
     MainMenu:
-
+    
 #Values for buttons inside of Spinner
 <SpinnerOption>
     text_size:self.width,None
@@ -37,7 +37,7 @@ SManager:
                     text_size: self.width, None
                     halign:'center'
                     values:'English - en','język polski - pl','русския язык - ru'
-                    on_text: app.change_language(languages.text);app.save_settings()
+                    on_text: app.change_language(languages.text);app.save_settings('letters')
 
             #Layout holding elements other than topbar
             BoxLayout:
@@ -59,6 +59,7 @@ SManager:
                         id: geo_letter
                         text:app.first_geo_letter
                         halign:'center'
+                        font_size:self.height/2
                         #Not included in the repo
                         #Georgian fonts can be found at:
                         #https://fonts.google.com/
@@ -68,9 +69,15 @@ SManager:
                     #Just a placeholder button for testing purposes
                     #To be removed after implementing functionality
                     #to random letter buttons
+                    BoxLayout:
+                        size_hint_x:0.2
                     MDIconButton:
                         icon:'arrow-right-thick'
+                        pos_hint:{'center_x':0.5}
                         on_release:app.pick_georgian_letter()
+                    BoxLayout:
+                        size_hint_x:0.2
+                        
 
                 #Layout storing 4 cards, 3 with random letters 
                 #and one with correct answer.
@@ -94,6 +101,7 @@ SManager:
                             id:first_card_text
                             text:app.first_correct_answer
                             halign:'center'
+                            font_size:self.height/2
 
                     BoxLayout:
                         size_hint_x: 0.02
@@ -110,8 +118,10 @@ SManager:
                         on_release: app.check_answer(root.ids.geo_letter.text,root.ids.second_card_text.text)
                         MDLabel:
                             id:second_card_text
+                            font_size:root.ids.first_card_text.font_size
                             text:app.first_random_letters[0]
                             halign:'center'
+                        
 
                     BoxLayout:
                         size_hint_x: 0.02
@@ -127,6 +137,7 @@ SManager:
                         on_release: app.check_answer(root.ids.geo_letter.text,root.ids.third_card_text.text)
                         MDLabel:
                             id:third_card_text
+                            font_size:root.ids.first_card_text.font_size
                             text:app.first_random_letters[1]
                             halign:'center'
                     
@@ -144,6 +155,7 @@ SManager:
                         on_release: app.check_answer(root.ids.geo_letter.text,root.ids.fourth_card_text.text)
                         MDLabel:
                             id:fourth_card_text
+                            font_size:root.ids.first_card_text.font_size
                             text:app.first_random_letters[2]
                             halign:'center'
 
