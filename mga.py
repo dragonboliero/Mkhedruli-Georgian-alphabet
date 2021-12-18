@@ -59,6 +59,7 @@ class Mkhedruli(MDApp):
         self.settings = load_settings
         self.current_lng = self.settings['language']
         self.language_strings = load_strings
+        self.default_card_color = (0.2,0.1,1,1)
         self.first_geo_letter = random.choice(list(georgian_letters_dict))
         self.first_correct_answer = georgian_letters_dict[self.first_geo_letter][self.settings['language']]
         self.first_random_letters = [random.choice(list(georgian_letters_dict.keys())) for letter in range(3)]
@@ -86,26 +87,45 @@ class Mkhedruli(MDApp):
         #Pick random letter from the array and then associate it with all MDCards
         random_to_add = random.choice(new_random_letters)
         self.root.get_screen('MainMenu').ids.first_card_text.text = random_to_add
+        self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = self.default_card_color
         new_random_letters.remove(random_to_add)
 
         random_to_add = random.choice(new_random_letters)
         self.root.get_screen('MainMenu').ids.second_card_text.text = random_to_add
+        self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = self.default_card_color
         new_random_letters.remove(random_to_add)
 
         random_to_add = random.choice(new_random_letters)
         self.root.get_screen('MainMenu').ids.third_card_text.text = random_to_add
+        self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = self.default_card_color
         new_random_letters.remove(random_to_add)
 
         random_to_add = random.choice(new_random_letters)
         self.root.get_screen('MainMenu').ids.fourth_card_text.text = random_to_add
+        self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = self.default_card_color
         new_random_letters.remove(random_to_add)
 
     #Checks if user answer is correct
-    def check_answer(self,geo_letter,answer):
+    def check_answer(self,geo_letter,answer,card_id):
+
         if answer == georgian_letters_dict[geo_letter][self.settings['language']]:
-            print('well done')
+            if card_id == 0:
+                self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = (0,1,0,1)
+            if card_id == 1:
+                self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = (0,1,0,1)
+            if card_id == 2:
+                self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = (0,1,0,1)
+            if card_id == 3:
+                self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = (0,1,0,1)
         else:
-            print('bad answer')
+            if card_id == 0:
+                self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = (1,0,0,1)
+            if card_id == 1:
+                self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = (1,0,0,1)
+            if card_id == 2:
+                self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = (1,0,0,1)
+            if card_id == 3:
+                self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = (1,0,0,1)
 
     #Save settings to the file
     def save_settings(self,screen):

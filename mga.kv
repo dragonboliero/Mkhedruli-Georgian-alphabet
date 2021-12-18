@@ -51,7 +51,7 @@ SManager:
                     size_hint:(0.35,0.15)
                     pos_hint_y: 0.3
                     halign:'center'
-                    md_bg_color: (0.2,0.1,1,1)
+                    md_bg_color: app.default_card_color
                     pos_hint:{'center_x':0.5}
                     radius: [dp(20),dp(20),dp(20),dp(20)]
                     spacing:"56dp"
@@ -90,13 +90,14 @@ SManager:
 
                     #1st letter
                     MDCard:
+                        id:first_letter
                         size_hint:(0.2,0.2)
                         halign:'center'
-                        md_bg_color: (0.2,0.1,1,1)
+                        md_bg_color: app.default_card_color
                         pos_hint:{'center_x':0.5}
                         radius: [dp(20),dp(20),dp(20),dp(20)]
                         spacing: dp(20)
-                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.first_card_text.text)
+                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.first_card_text.text,0)
                         MDLabel:
                             id:first_card_text
                             text:app.first_correct_answer
@@ -108,14 +109,14 @@ SManager:
 
                     #Second Letter
                     MDCard:
-                        id:first_card
+                        id:second_letter
                         size_hint:(0.2,0.4)
                         halign:'center'
-                        md_bg_color: (0.2,0.1,1,1)
+                        md_bg_color: app.default_card_color
                         pos_hint:{'center_x':0.5}
                         radius: [dp(20),dp(20),dp(20),dp(20)]
                         padding: 16
-                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.second_card_text.text)
+                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.second_card_text.text,1)
                         MDLabel:
                             id:second_card_text
                             font_size:root.ids.first_card_text.font_size
@@ -128,13 +129,14 @@ SManager:
                     
                     #3rd letter
                     MDCard:
+                        id:third_letter
                         size_hint:(0.2,0.4)
                         halign:'center'
-                        md_bg_color: (0.2,0.1,1,1)
+                        md_bg_color: app.default_card_color
                         pos_hint:{'center_x':0.5}
                         radius: [dp(20),dp(20),dp(20),dp(20)]
                         padding: 16
-                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.third_card_text.text)
+                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.third_card_text.text,2)
                         MDLabel:
                             id:third_card_text
                             font_size:root.ids.first_card_text.font_size
@@ -146,13 +148,14 @@ SManager:
 
                     #4th letter                
                     MDCard:
+                        id:fourth_letter
                         size_hint:(0.2,0.4)
                         halign:'center'
-                        md_bg_color: (0.2,0.1,1,1)
+                        md_bg_color: app.default_card_color
                         pos_hint:{'center_x':0.5}
                         radius: [dp(20),dp(20),dp(20),dp(20)]
                         padding: 16
-                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.fourth_card_text.text)
+                        on_release: app.check_answer(root.ids.geo_letter.text,root.ids.fourth_card_text.text,3)
                         MDLabel:
                             id:fourth_card_text
                             font_size:root.ids.first_card_text.font_size
