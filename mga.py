@@ -60,12 +60,16 @@ class Mkhedruli(MDApp):
         self.current_lng = self.settings['language']
         self.language_strings = load_strings
         self.default_card_color = (0.2,0.1,1,1)
+        self.letters_dict ={}
         self.first_geo_letter = random.choice(list(georgian_letters_dict))
         self.first_correct_answer = georgian_letters_dict[self.first_geo_letter][self.settings['language']]
-        self.first_random_letters = [random.choice(list(georgian_letters_dict.keys())) for letter in range(3)]
-        self.first_random_letters = [georgian_letters_dict[self.first_random_letters[current_choice]][self.settings['language']] for current_choice in range(3)]
+        self.first_random_geo_letters = [random.choice(list(georgian_letters_dict.keys())) for letter in range(3)]
+        self.first_random_letters = [georgian_letters_dict[self.first_random_geo_letters[current_choice]][self.settings['language']] for current_choice in range(3)]
+        self.first_random_letters.append(self.first_correct_answer)
+        self.shuffled_first_letters = random.sample(self.first_random_letters,len(self.first_random_letters))
         app_uix = Builder.load_file('mga.kv')
         return app_uix
+
 
     #Function for changing language settings in the app
     def change_language(self, lang):

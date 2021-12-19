@@ -100,9 +100,9 @@ SManager:
                         on_release: app.check_answer(root.ids.geo_letter.text,root.ids.first_card_text.text,0)
                         MDLabel:
                             id:first_card_text
-                            text:app.first_correct_answer
+                            text:app.shuffled_first_letters[0]
                             halign:'center'
-                            font_size:self.height/2
+                            font_size:self.height/3
 
                     BoxLayout:
                         size_hint_x: 0.02
@@ -120,7 +120,7 @@ SManager:
                         MDLabel:
                             id:second_card_text
                             font_size:root.ids.first_card_text.font_size
-                            text:app.first_random_letters[0]
+                            text:app.shuffled_first_letters[1]
                             halign:'center'
                         
 
@@ -140,7 +140,7 @@ SManager:
                         MDLabel:
                             id:third_card_text
                             font_size:root.ids.first_card_text.font_size
-                            text:app.first_random_letters[1]
+                            text:app.shuffled_first_letters[2]
                             halign:'center'
                     
                     BoxLayout:
@@ -159,7 +159,7 @@ SManager:
                         MDLabel:
                             id:fourth_card_text
                             font_size:root.ids.first_card_text.font_size
-                            text:app.first_random_letters[2]
+                            text:app.shuffled_first_letters[3]
                             halign:'center'
 
                     BoxLayout:
