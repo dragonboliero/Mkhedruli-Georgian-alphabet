@@ -60,13 +60,41 @@ class Mkhedruli(MDApp):
         self.current_lng = self.settings['language']
         self.language_strings = load_strings
         self.default_card_color = (0.2,0.1,1,1)
+        #Copy of georgian_letters_dict that can be modified
+        cp_georgian_letters_dict = dict(georgian_letters_dict)
+        print(len(list(cp_georgian_letters_dict.keys())))
+        #Dictionary for storing user's language letters as keys and Georgian letters as values
         self.letters_dict ={}
-        self.first_geo_letter = random.choice(list(georgian_letters_dict))
-        self.first_correct_answer = georgian_letters_dict[self.first_geo_letter][self.settings['language']]
-        self.first_random_geo_letters = [random.choice(list(georgian_letters_dict.keys())) for letter in range(3)]
-        self.first_random_letters = [georgian_letters_dict[self.first_random_geo_letters[current_choice]][self.settings['language']] for current_choice in range(3)]
+        #Array for storing Georgian letters in given MDCard
+        self.letters_pos = [[0],[1],[2],[3]]
+        self.first_random_geo_letters =[]
+        self.first_random_letters = []
+        #Choose first Georgian letter
+        self.first_geo_letter = random.choice(list(cp_georgian_letters_dict))
+        #Pick  user's language equivalent
+        self.first_correct_answer = cp_georgian_letters_dict[self.first_geo_letter][self.settings['language']]
+        #Remove it from dictionary so that it's not repeated
+        del cp_georgian_letters_dict[self.first_geo_letter]
+        #Pick letters for another three MDCards and remove them from the copy of main dictionary
+        for current_letter in range(3):
+            self.first_random_geo_letters.append(random.choice(list(cp_georgian_letters_dict.keys())))    
+            self.first_random_letters.append(cp_georgian_letters_dict[self.first_random_geo_letters[current_letter]][self.settings['language']])
+            del cp_georgian_letters_dict[self.first_random_geo_letters[current_letter]]    
+        #Add correct answer to three wrong answers
         self.first_random_letters.append(self.first_correct_answer)
+
+        #Create a backward dictionary where user's equivalent is a key
+        for letter in range(3):
+            self.letters_dict[self.first_random_letters[letter]] = self.first_random_geo_letters[letter]
+        self.letters_dict[self.first_correct_answer] = self.first_geo_letter
+
+        #Set random positions to all letters
         self.shuffled_first_letters = random.sample(self.first_random_letters,len(self.first_random_letters))
+
+        #Assign Georgian letters to their position on MDCards
+        for geo_letter in range(4):
+            self.letters_pos[geo_letter].append(self.letters_dict[self.shuffled_first_letters[geo_letter]])
+        
         app_uix = Builder.load_file('mga.kv')
         return app_uix
 
@@ -74,40 +102,69 @@ class Mkhedruli(MDApp):
     #Function for changing language settings in the app
     def change_language(self, lang):
         self.settings['language'] = lang[-2:]
+        #Load app name in the new language
         self.root.get_screen('MainMenu').ids.apptitle.text = self.language_strings['app_name'][self.settings['language']]
+        #If user changes language reload values of MDCards in the new language
+        self.root.get_screen('MainMenu').ids.first_card_text.text = georgian_letters_dict[self.letters_pos[0][1]][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.second_card_text.text = georgian_letters_dict[self.letters_pos[1][1]][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.third_card_text.text = georgian_letters_dict[self.letters_pos[2][1]][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.fourth_card_text.text = georgian_letters_dict[self.letters_pos[3][1]][self.settings['language']]
 
     #Function for picking random Georgian letter in letter learning mode
     def pick_georgian_letter(self):
-        #Get random Georgian letter to guess
-        self.root.get_screen('MainMenu').ids.geo_letter.text = random.choice(list(georgian_letters_dict))
-        #Associate Georgian letter with user native lng letter
-        new_correct_letter = georgian_letters_dict[self.root.get_screen('MainMenu').ids.geo_letter.text][self.settings['language']]
-        #Choose three random letters for other MDCards
-        new_random_letters = [random.choice(list(georgian_letters_dict.keys())) for letter in range(3)]
-        new_random_letters = [georgian_letters_dict[new_random_letters[current_choice]][self.settings['language']] for current_choice in range(3)]
-        #Add correct answer to the same array
+        #Copy of georgian_letters_dict that can be modified
+        cp_georgian_letters_dict = dict(georgian_letters_dict)
+        new_random_geo_letters = []
+        new_random_letters = []
+        #Dictionary for storing user's language letters as keys and Georgian letters as values
+        letters_pair = {}
+        #Array for storing Georgian letters in given MDCard
+        new_letters_pos = [[0],[1],[2],[3]]
+        #Get random Georgian letter to guess and assign it to MDCard
+        geo_letter_to_guess = random.choice(list(cp_georgian_letters_dict))
+        self.root.get_screen('MainMenu').ids.geo_letter.text = geo_letter_to_guess
+        #Associate Georgian letter with user native lng letter and delete it from the main dictionary
+        new_correct_letter = cp_georgian_letters_dict[geo_letter_to_guess][self.settings['language']]
+        del cp_georgian_letters_dict[geo_letter_to_guess]
+        #Choose three random letters for other MDCards and remove them from the main dictionary
+        for current_letter in range(3):
+            new_random_geo_letters.append(random.choice(list(cp_georgian_letters_dict.keys())))
+            new_random_letters.append(cp_georgian_letters_dict[new_random_geo_letters[current_letter]][self.settings['language']])
+            #Associate user's language letter with Georgian letter
+            letters_pair[new_random_letters[current_letter]] = new_random_geo_letters[current_letter]
+            del cp_georgian_letters_dict[new_random_geo_letters[current_letter]]
+        #Add correct answer to the same array as wrong answers
         new_random_letters.append(new_correct_letter)
+        #Add correct answer pair
+        letters_pair[new_correct_letter] = geo_letter_to_guess
         
-        #Pick random letter from the array and then associate it with all MDCards
+        #Pick random letter from the array and then associate it with all MDCards and it's position
         random_to_add = random.choice(new_random_letters)
+        new_letters_pos[0].append(letters_pair[random_to_add])
         self.root.get_screen('MainMenu').ids.first_card_text.text = random_to_add
         self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = self.default_card_color
         new_random_letters.remove(random_to_add)
 
         random_to_add = random.choice(new_random_letters)
+        new_letters_pos[1].append(letters_pair[random_to_add])
         self.root.get_screen('MainMenu').ids.second_card_text.text = random_to_add
         self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = self.default_card_color
         new_random_letters.remove(random_to_add)
 
         random_to_add = random.choice(new_random_letters)
+        new_letters_pos[2].append(letters_pair[random_to_add])
         self.root.get_screen('MainMenu').ids.third_card_text.text = random_to_add
         self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = self.default_card_color
         new_random_letters.remove(random_to_add)
 
         random_to_add = random.choice(new_random_letters)
+        new_letters_pos[3].append(letters_pair[random_to_add])
         self.root.get_screen('MainMenu').ids.fourth_card_text.text = random_to_add
         self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = self.default_card_color
         new_random_letters.remove(random_to_add)
+        
+        #Return positions of picked values needed to be used when chaning language
+        self.letters_pos = new_letters_pos
 
     #Checks if user answer is correct
     def check_answer(self,geo_letter,answer,card_id):
