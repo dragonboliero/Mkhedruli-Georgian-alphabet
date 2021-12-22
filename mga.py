@@ -15,6 +15,7 @@ from kivymd.app import MDApp
 from kivy.lang.builder import Builder
 from kivy.uix.screenmanager  import Screen,ScreenManager
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.slider import Slider
 from kivy.core.window import Window
 from kivy.clock import Clock
 import data_loader as dl
@@ -43,6 +44,24 @@ georgian_letters_dict = {
 'ჰ':{'en':'h','pl':'h','ru':'х'}
 }
 
+
+
+class ModifiedSlider(Slider):
+    def __init__(self, **kwargs):
+        self.register_event_type('on_release')
+        super(ModifiedSlider, self).__init__(**kwargs)
+
+    def on_release(self):
+        pass
+
+    def on_touch_up(self, touch):
+        super(ModifiedSlider, self).on_touch_up(touch)
+        if touch.grab_current == self:
+            self.dispatch('on_release')
+            return True
+
+
+
 #Resolution which simulates mobile phone
 Window.size = (405,900)
 
@@ -57,14 +76,20 @@ class TopPanel(GridLayout):
 #Main app
 class Mkhedruli(MDApp):
     def build(self):    
+        #Font with Georgian letters
+        self.geo_font = '../geo_font.ttf'
+        #Timer state in Time Attack mode
+        self.counting_down = False
+        #Time Attack clock object
+        self.time_attack_clock = 0
         self.settings = load_settings
         self.current_lng = self.settings['language']
         self.language_strings = load_strings
         #Time attack initial text
-        self.time_attack_initial = self.language_strings['time_left'][self.settings['language']] + '60'
+        self.time_attack_initial = self.language_strings['time_left'][self.settings['language']] + '1:00'
         self.default_card_color = (0.2,0.1,1,1)
         #How much time does the player have in time attack mode for answers
-        self.time_attack_seconds = 60
+        self.time_attack_seconds = 10
         #Copy of georgian_letters_dict that can be modified
         cp_georgian_letters_dict = dict(georgian_letters_dict)
         #Dictionary for storing user's language letters as keys and Georgian letters as values
@@ -117,7 +142,7 @@ class Mkhedruli(MDApp):
 
 
     #Function for picking random Georgian letter in letter learning mode
-    def pick_georgian_letter(self):
+    def pick_georgian_letter(self,mode):
         #Copy of georgian_letters_dict that can be modified
         cp_georgian_letters_dict = dict(georgian_letters_dict)
         new_random_geo_letters = []
@@ -128,7 +153,13 @@ class Mkhedruli(MDApp):
         new_letters_pos = [[0],[1],[2],[3]]
         #Get random Georgian letter to guess and assign it to MDCard
         geo_letter_to_guess = random.choice(list(cp_georgian_letters_dict))
-        self.root.get_screen('MainMenu').ids.geo_letter.text = geo_letter_to_guess
+        #If letters learning mode
+        if mode == 0:
+            self.root.get_screen('MainMenu').ids.geo_letter.text = geo_letter_to_guess
+        #If time attack mode
+        if mode == 1:
+            self.root.get_screen('MainMenu').ids.geo_letter_ta.text = geo_letter_to_guess
+
         #Associate Georgian letter with user native lng letter and delete it from the main dictionary
         new_correct_letter = cp_georgian_letters_dict[geo_letter_to_guess][self.settings['language']]
         del cp_georgian_letters_dict[geo_letter_to_guess]
@@ -206,12 +237,14 @@ class Mkhedruli(MDApp):
 
     #Method starting timer in Time Attack mode
     def TimeAttackClock(self):
-        Clock.schedule_interval(self.CallbackClock,1)      
+        if self.counting_down == False:
+            self.time_attack_clock = Clock.schedule_interval(self.CallbackClock,1) 
+            self.counting_down = True    
 
 
     #Method returning value of time left in Time Attack mode
     def CallbackClock(self,dt):
-        if self.time_attack_seconds > 1:
+        if self.time_attack_seconds > 0:
             self.time_attack_seconds -=1
             time_modulo = self.time_attack_seconds % 60
             minutes = str(int((self.time_attack_seconds - time_modulo) / 60))
@@ -220,12 +253,16 @@ class Mkhedruli(MDApp):
             else:
                 seconds = str(time_modulo)
             self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + minutes + ':' + seconds
+        else:
+            self.counting_down = False
+            self.time_attack_clock.cancel()
 
 
     #Method swapping current MDLabel time value with slider value in Time Attack mode
     def ConvertTimeSliderValueToSeconds(self):
-        self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
-        self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
+        if self.counting_down == False:
+            self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
+            self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
 
 
 Mkhedruli().run()

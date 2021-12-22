@@ -63,7 +63,7 @@ SManager:
                         #Not included in the repo
                         #Georgian fonts can be found at:
                         #https://fonts.google.com/
-                        font_name:'../geo_font.ttf'
+                        font_name:app.geo_font
                 BoxLayout:
                     size_hint_y:0.15 
                     #Just a placeholder button for testing purposes
@@ -74,7 +74,7 @@ SManager:
                     MDIconButton:
                         icon:'arrow-right-thick'
                         pos_hint:{'center_x':0.5}
-                        on_release:app.pick_georgian_letter()
+                        on_release:app.pick_georgian_letter(0)
                     BoxLayout:
                         size_hint_x:0.2
                         
@@ -168,7 +168,8 @@ SManager:
                 #Making space between random letters and bottom navbar        
                 BoxLayout:
                     size_hint_y:0.03
-                    
+
+
         #Time attack screen
         MDBottomNavigationItem:
             name:'time-attack'
@@ -191,22 +192,68 @@ SManager:
                     halign:'center'
                     values:'English - en','język polski - pl','русския язык - ru'
                     on_text: app.change_language(languages.text);app.save_settings('letters')
-            MDLabel:
-                id: timer
-                text:app.time_attack_initial
-            Slider:
-                id:time_value
-                min:1
-                max:5.99
-                value:1
-                hint:True
-                hint_text_color:(1,0,0,1)
-                size_hint:(0.5,0.1)
-                pos_hint:{'center_x':0.5,'center_y':0.7}
-                on_touch_up: app.ConvertTimeSliderValueToSeconds()
-            Button:
-                size_hint:(0.1,0.1)
-                on_release:app.TimeAttackClock()
+            BoxLayout:
+                orientation:'vertical'                    
+                size_hint_y:0.8
+                GridLayout:
+                    size_hint_y:0.2
+                    cols:2
+                    MDLabel:
+                        id: timer
+                        text:app.time_attack_initial
+                    ModifiedSlider:
+                        id:time_value
+                        min:1
+                        max:5.99
+                        value:1
+                        hint:True
+                        hint_text_color:(1,0,0,1)
+                        size_hint:(0.5,root.height)
+                        pos_hint:{'center_x':0.5,'center_y':0.7}
+                        on_release: app.ConvertTimeSliderValueToSeconds()
+                #Card displaying random Georgian letter
+                MDCard:
+                    size_hint:(0.35,0.15)
+                    pos_hint_y: 0.3
+                    halign:'center'
+                    md_bg_color: app.default_card_color
+                    pos_hint:{'center_x':0.5}
+                    radius: [dp(20),dp(20),dp(20),dp(20)]
+                    spacing:"56dp"
+                    MDLabel:
+                        id: geo_letter_ta
+                        text:app.first_geo_letter
+                        halign:'center'
+                        font_size:self.height/2
+                        #Not included in the repo
+                        #Georgian fonts can be found at:
+                        #https://fonts.google.com/
+                        font_name:app.geo_font
+                BoxLayout:
+                    size_hint_y:0.15 
+                    #Just a placeholder button for testing purposes
+                    #To be removed after implementing functionality
+                    #to random letter buttons
+                    BoxLayout:
+                        size_hint_x:0.2
+                    MDIconButton:
+                        icon:'arrow-right-thick'
+                        pos_hint:{'center_x':0.5}
+                        on_release:app.pick_georgian_letter(1);app.TimeAttackClock()
+                    BoxLayout:
+                        size_hint_x:0.2
+                BoxLayout:
+                    size_hint_y:0.07
+                    BoxLayout:
+                        size_hint:0.4,None
+                    BoxLayout:
+                        size_hint:0.2,0.8
+                        MDTextFieldRect:
+                            id:TimeAttackAnswer
+                    BoxLayout:
+                        size_hint:0.4,None
+                BoxLayout:
+                    size_hint_y:0.03
 
 
         #Words learning screen
