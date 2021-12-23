@@ -8,6 +8,8 @@ To do list:
             *Settings screen.
             *App strings in three languages: English, Polish and Russian
             *Achievements(?)
+To fix:
+        *Language name doesn't change on all spinners
 '''
 
 
@@ -44,8 +46,14 @@ georgian_letters_dict = {
 'ჰ':{'en':'h','pl':'h','ru':'х'}
 }
 
+#Resolution which simulates mobile phone
+Window.size = (405,900)
 
-
+'''
+ModifiedSlider allows using on_release event instead of on_touch up
+code created by hchandad
+https://gist.github.com/hchandad/b71ed0e977e6d345bcb8
+'''
 class ModifiedSlider(Slider):
     def __init__(self, **kwargs):
         self.register_event_type('on_release')
@@ -60,11 +68,6 @@ class ModifiedSlider(Slider):
             self.dispatch('on_release')
             return True
 
-
-
-#Resolution which simulates mobile phone
-Window.size = (405,900)
-
 class SManager(ScreenManager):
     pass
 class MainMenu(Screen):
@@ -78,18 +81,24 @@ class Mkhedruli(MDApp):
     def build(self):    
         #Font with Georgian letters
         self.geo_font = '../geo_font.ttf'
+        self.settings = load_settings
+        self.current_lng = self.settings['language']
+        self.language_strings = load_strings
         #Timer state in Time Attack mode
         self.counting_down = False
         #Time Attack clock object
         self.time_attack_clock = 0
-        self.settings = load_settings
-        self.current_lng = self.settings['language']
-        self.language_strings = load_strings
+        #Initial Time Attack correct answers string
+        self.answer_streak_string_ta = self.language_strings['correct_answers_ta'][self.current_lng] + ' 0' 
+        #Variable for storing whether it's the first quiz in Time Attack mode
+        self.first_run_ta = False
+        #Initial numer of correct answers in Time Attack mode
+        self.answer_streak_score_ta = 0
         #Time attack initial text
         self.time_attack_initial = self.language_strings['time_left'][self.settings['language']] + '1:00'
         self.default_card_color = (0.2,0.1,1,1)
         #How much time does the player have in time attack mode for answers
-        self.time_attack_seconds = 10
+        self.time_attack_seconds = 60
         #Copy of georgian_letters_dict that can be modified
         cp_georgian_letters_dict = dict(georgian_letters_dict)
         #Dictionary for storing user's language letters as keys and Georgian letters as values
@@ -131,6 +140,7 @@ class Mkhedruli(MDApp):
     #Function for changing language settings in the app
     def change_language(self, lang):
         self.settings['language'] = lang[-2:]
+        #Letters learning screen
         #Load app name in the new language
         self.root.get_screen('MainMenu').ids.apptitle.text = self.language_strings['app_name'][self.settings['language']]
         #If user changes language reload values of MDCards in the new language
@@ -138,7 +148,11 @@ class Mkhedruli(MDApp):
         self.root.get_screen('MainMenu').ids.second_card_text.text = georgian_letters_dict[self.letters_pos[1][1]][self.settings['language']]
         self.root.get_screen('MainMenu').ids.third_card_text.text = georgian_letters_dict[self.letters_pos[2][1]][self.settings['language']]
         self.root.get_screen('MainMenu').ids.fourth_card_text.text = georgian_letters_dict[self.letters_pos[3][1]][self.settings['language']]
+
+        #Time Attack screen
+        self.root.get_screen('MainMenu').ids.apptitle_ta.text = self.language_strings['app_name'][self.settings['language']]
         self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(self.time_attack_seconds)
+        self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.settings['language']] + ' ' + str(self.answer_streak_score_ta)
 
 
     #Function for picking random Georgian letter in letter learning mode
@@ -205,30 +219,38 @@ class Mkhedruli(MDApp):
 
 
     #Checks if user answer is correct
-    def check_answer(self,geo_letter,answer,card_id):
-
-        if answer == georgian_letters_dict[geo_letter][self.settings['language']]:
-            if card_id == 0:
-                self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = (0,1,0,1)
-            if card_id == 1:
-                self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = (0,1,0,1)
-            if card_id == 2:
-                self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = (0,1,0,1)
-            if card_id == 3:
-                self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = (0,1,0,1)
-        else:
-            if card_id == 0:
-                self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = (1,0,0,1)
-            if card_id == 1:
-                self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = (1,0,0,1)
-            if card_id == 2:
-                self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = (1,0,0,1)
-            if card_id == 3:
-                self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = (1,0,0,1)
+    def check_answer(self,geo_letter,answer,card_id,mode):
+        
+        #Letter learning mode
+        if mode == 0:
+            if answer == georgian_letters_dict[geo_letter][self.settings['language']]:
+                if card_id == 0:
+                    self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = (0,1,0,1)
+                if card_id == 1:
+                    self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = (0,1,0,1)
+                if card_id == 2:
+                    self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = (0,1,0,1)
+                if card_id == 3:
+                    self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = (0,1,0,1)
+            else:
+                if card_id == 0:
+                    self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = (1,0,0,1)
+                if card_id == 1:
+                    self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = (1,0,0,1)
+                if card_id == 2:
+                    self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = (1,0,0,1)
+                if card_id == 3:
+                    self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = (1,0,0,1)
+        #Time Attack mode
+        if mode == 1:
+            if answer == georgian_letters_dict[geo_letter][self.settings['language']]:
+                self.answer_streak_score_ta +=1
+                self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.current_lng] + ' ' + str(self.answer_streak_score_ta)
+            self.root.get_screen('MainMenu').ids.TimeAttackAnswer.text=''
 
 
     #Save settings to the file
-    def save_settings(self,screen):
+    def save_settings(self):
         with open('data/settings.csv','w') as settings_file:
             for key,value in self.settings.items():
                 settings_value = f'{key},{value}\n'
@@ -237,9 +259,14 @@ class Mkhedruli(MDApp):
 
     #Method starting timer in Time Attack mode
     def TimeAttackClock(self):
+        #If it's used when countdown has not begin yet.
         if self.counting_down == False:
             self.time_attack_clock = Clock.schedule_interval(self.CallbackClock,1) 
-            self.counting_down = True    
+            self.counting_down = True
+            #If it's used not for the first time - reset correct answers number
+            if self.first_run_ta == True:
+                self.answer_streak_score_ta = 0
+                self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.current_lng] + ' ' + str(self.answer_streak_score_ta)  
 
 
     #Method returning value of time left in Time Attack mode
@@ -256,7 +283,8 @@ class Mkhedruli(MDApp):
         else:
             self.counting_down = False
             self.time_attack_clock.cancel()
-
+            self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
+            self.first_run_ta = True
 
     #Method swapping current MDLabel time value with slider value in Time Attack mode
     def ConvertTimeSliderValueToSeconds(self):
