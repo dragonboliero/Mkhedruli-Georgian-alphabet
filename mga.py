@@ -18,6 +18,7 @@ from kivy.lang.builder import Builder
 from kivy.uix.screenmanager  import Screen,ScreenManager
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.slider import Slider
+from kivymd.uix.dialog import MDDialog
 from kivy.core.window import Window
 from kivy.clock import Clock
 import data_loader as dl
@@ -94,11 +95,13 @@ class Mkhedruli(MDApp):
         self.first_run_ta = False
         #Initial numer of correct answers in Time Attack mode
         self.answer_streak_score_ta = 0
+        #Total number of answers in one run of Time Attack game
+        self.all_answers_ta = 0
         #Time attack initial text
         self.time_attack_initial = self.language_strings['time_left'][self.settings['language']] + '1:00'
         self.default_card_color = (0.2,0.1,1,1)
         #How much time does the player have in time attack mode for answers
-        self.time_attack_seconds = 60
+        self.time_attack_seconds = 6
         #Copy of georgian_letters_dict that can be modified
         cp_georgian_letters_dict = dict(georgian_letters_dict)
         #Dictionary for storing user's language letters as keys and Georgian letters as values
@@ -243,6 +246,8 @@ class Mkhedruli(MDApp):
                     self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = (1,0,0,1)
         #Time Attack mode
         if mode == 1:
+            #Add +1 to the counter no matter what is the answer
+            self.all_answers_ta +=1
             if answer == georgian_letters_dict[geo_letter][self.settings['language']]:
                 self.answer_streak_score_ta +=1
                 self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.current_lng] + ' ' + str(self.answer_streak_score_ta)
@@ -263,10 +268,6 @@ class Mkhedruli(MDApp):
         if self.counting_down == False:
             self.time_attack_clock = Clock.schedule_interval(self.CallbackClock,1) 
             self.counting_down = True
-            #If it's used not for the first time - reset correct answers number
-            if self.first_run_ta == True:
-                self.answer_streak_score_ta = 0
-                self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.current_lng] + ' ' + str(self.answer_streak_score_ta)  
 
 
     #Method returning value of time left in Time Attack mode
@@ -285,6 +286,19 @@ class Mkhedruli(MDApp):
             self.time_attack_clock.cancel()
             self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
             self.first_run_ta = True
+            #Calculate % of correct answers in this run in Time Attack Mode
+            percent_correct = (self.answer_streak_score_ta/self.all_answers_ta) * 100
+            #Display statistics of this run in Time Attack mode
+            display_run_stats = MDDialog(text=f"""
+            {self.language_strings['time_up_ta'][self.settings['language']]}
+            {self.language_strings['correct_answers_ta'][self.settings['language']]}{self.answer_streak_score_ta}
+            {self.language_strings['perc_ca_ta'][self.settings['language']]}{percent_correct:.2f}
+            """)
+            display_run_stats.open()
+            #Reset correct answers score and number of answers
+            self.answer_streak_score_ta = 0
+            self.all_answers_ta = 0
+            self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.current_lng] + ' ' + str(self.answer_streak_score_ta)  
 
     #Method swapping current MDLabel time value with slider value in Time Attack mode
     def ConvertTimeSliderValueToSeconds(self):
