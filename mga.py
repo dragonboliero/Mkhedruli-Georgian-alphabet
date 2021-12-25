@@ -3,7 +3,7 @@ To do list:
             *App design based on MDBottomNavigation
             *Main screen with letter learning mode
             *Time attack mode(?)
-            *Screen with basic words learning.
+            *Transcription screen.
             *Screen with history of Georgian writing.
             *Settings screen.
             *App strings in three languages: English, Polish and Russian
