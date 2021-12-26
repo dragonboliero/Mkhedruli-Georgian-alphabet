@@ -8,7 +8,7 @@
 - History of Georgian alphabets
 - Settings
 - Achievements.
-At launch the app will be available in three languages:
+#### At launch the app will be available in three languages:
 - English
 - Russian
 - Polish 
