@@ -101,7 +101,7 @@ class Mkhedruli(MDApp):
         self.time_attack_initial = self.language_strings['time_left'][self.settings['language']] + '1:00'
         self.default_card_color = (0.2,0.1,1,1)
         #How much time does the player have in time attack mode for answers
-        self.time_attack_seconds = 6
+        self.time_attack_seconds = 60
         #Copy of georgian_letters_dict that can be modified
         cp_georgian_letters_dict = dict(georgian_letters_dict)
         #Dictionary for storing user's language letters as keys and Georgian letters as values
