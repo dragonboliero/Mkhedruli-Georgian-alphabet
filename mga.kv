@@ -11,6 +11,21 @@ SManager:
     size_hint_y:0.10
     pos_hint:{'center_y':0.951}
 
+<AlphaCard@MDCard>:
+    id:alcard
+    size_hint:(0.8,0.8)
+    md_bg_color: (159/256,189/256,237/256,1)
+    padding: dp(15)
+    spacing: dp(15)
+    radius: [dp(25),dp(25),dp(25),dp(25)]
+    ripple_behavior: False
+    source:""
+    elevation:30
+    orientation:'horizontal'
+    label_text:''
+    MDLabel:
+        text:root.label_text
+        halign:'center'
 
 
 <MainMenu>
@@ -264,10 +279,59 @@ SManager:
         MDBottomNavigationItem:
             name:'words'
             icon:'text-box-outline'
+
+
         #Screen with history of Georgian alphabets
         MDBottomNavigationItem:
             name:'history'
             icon:'book-open-blank-variant'
+            TopPanel:
+                #App name string
+                MDLabel:
+                    id:apptitle_alph
+                    text:app.language_strings['app_name'][app.settings['language']]
+                    size_hint:(0.9,0.1)
+                    pos_hint:{'center_x':0.5,'center_y':0.98}
+                    halign:'center'
+                #Dropdown list with available languages
+                Spinner:
+                    id:languages_alph
+                    size_hint:(0.2,0.1)
+                    pos_hint:{'right':0.98,'center_y':0.98}
+                    text:app.current_lng
+                    text_size: self.width, None
+                    halign:'center'
+                    values:'English - en','język polski - pl','русския язык - ru'
+                    on_text: app.change_language(languages_alph.text);app.save_settings()
+            BoxLayout:
+                orientation:'vertical'                    
+                size_hint_y:0.8
+                MDLabel:
+                    id:screen_title_alph
+                    text:app.language_strings['title_alph'][app.settings['language']]
+                    size_hint_y:0.02
+                    halign:'center'
+                MDGridLayout:
+                    size_hint_y:0.2
+                    rows: 2
+                    cols:2
+                    spacing: dp(20)
+                    padding: [dp(20),dp(20),dp(20),dp(20)]
+                    AlphaCard:
+                        id:alph_general
+                        label_text:app.language_strings['gen_alph'][app.settings['language']]
+                    AlphaCard:
+                        id:alph_asomtavruli
+                        label_text:app.language_strings['asomtavruli'][app.settings['language']]
+                    AlphaCard:
+                        id:alph_nuskhuri
+                        label_text:app.language_strings['nuskhuri'][app.settings['language']]
+                    AlphaCard:
+                        id:alph_mkhedruli
+                        label_text:app.language_strings['mkhedruli'][app.settings['language']]
+            BoxLayout:
+                size_hint_y:0.07
+
         #Settings screen
         MDBottomNavigationItem:
             name:'settings'

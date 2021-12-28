@@ -157,6 +157,13 @@ class Mkhedruli(MDApp):
         self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(self.time_attack_seconds)
         self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.settings['language']] + ' ' + str(self.answer_streak_score_ta)
 
+        #History of Georgian alphabets
+        self.root.get_screen('MainMenu').ids.apptitle_alph.text = self.language_strings['app_name'][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.screen_title_alph.text = self.language_strings['title_alph'][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.alph_general.label_text = self.language_strings['gen_alph'][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.alph_asomtavruli.label_text = self.language_strings['asomtavruli'][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.alph_nuskhuri.label_text = self.language_strings['nuskhuri'][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.alph_mkhedruli.label_text = self.language_strings['mkhedruli'][self.settings['language']]
 
     #Function for picking random Georgian letter in letter learning mode
     def pick_georgian_letter(self,mode):
