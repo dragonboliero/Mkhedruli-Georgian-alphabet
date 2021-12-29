@@ -313,5 +313,16 @@ class Mkhedruli(MDApp):
             self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
             self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
 
+    #Method for displaying MDDialog with information about alphabets in Georgian alphabets'
+    #history screen
+    def history_screen_dialog(self,card_name,card_text):
+        dialog_text = f"""
+{self.language_strings[card_name][self.settings['language']]}
+
+{self.language_strings[card_text][self.settings['language']]}
+        """
+        info_dialog = MDDialog(text=dialog_text,radius=[20,7,20,7])
+        info_dialog.open()
+
 
 Mkhedruli().run()

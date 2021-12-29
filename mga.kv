@@ -320,15 +320,19 @@ SManager:
                     AlphaCard:
                         id:alph_general
                         label_text:app.language_strings['gen_alph'][app.settings['language']]
+                        on_release:app.history_screen_dialog('gen_alph','gen_alph_info')
                     AlphaCard:
                         id:alph_asomtavruli
                         label_text:app.language_strings['asomtavruli'][app.settings['language']]
+                        on_release:app.history_screen_dialog('asomtavruli','asomtavruli_info')
                     AlphaCard:
                         id:alph_nuskhuri
                         label_text:app.language_strings['nuskhuri'][app.settings['language']]
+                        on_release:app.history_screen_dialog('nuskhuri','nuskhuri_info')
                     AlphaCard:
                         id:alph_mkhedruli
                         label_text:app.language_strings['mkhedruli'][app.settings['language']]
+                        on_release:app.history_screen_dialog('mkhedruli','mkhedruli_info')
             BoxLayout:
                 size_hint_y:0.07
 
