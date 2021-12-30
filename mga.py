@@ -26,6 +26,7 @@ import random
 
 load_strings = dl.load_lang_data()
 load_settings = dl.load_settings()
+transcription_texts = dl.load_transcription_texts()
 
 georgian_letters_dict = {
 'ა':{'en':'a','pl':'a','ru':'а'},'ბ':{'en':'b','pl':'b','ru':'б'},
@@ -85,6 +86,11 @@ class Mkhedruli(MDApp):
         self.settings = load_settings
         self.current_lng = self.settings['language']
         self.language_strings = load_strings
+        #Total number of lines in all texts for transcription
+        self.trans_lines_total = len(transcription_texts) - 1
+        self.transcriptions = list(transcription_texts)
+        #Counter for current transcription line
+        self.tran_line = 1
         #Timer state in Time Attack mode
         self.counting_down = False
         #Time Attack clock object
@@ -156,6 +162,9 @@ class Mkhedruli(MDApp):
         self.root.get_screen('MainMenu').ids.apptitle_ta.text = self.language_strings['app_name'][self.settings['language']]
         self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(self.time_attack_seconds)
         self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.settings['language']] + ' ' + str(self.answer_streak_score_ta)
+
+        #Transcription mode
+        self.root.get_screen('MainMenu').ids.apptitle_trans.text=self.language_strings['app_name'][self.settings['language']]
 
         #History of Georgian alphabets
         self.root.get_screen('MainMenu').ids.apptitle_alph.text = self.language_strings['app_name'][self.settings['language']]
@@ -312,6 +321,14 @@ class Mkhedruli(MDApp):
         if self.counting_down == False:
             self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
             self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
+    
+
+    def GetTranscriptionLine(self):
+            self.root.get_screen('MainMenu').ids.trans_text.text = transcription_texts[self.tran_line]
+            if self.tran_line < self.trans_lines_total:
+                self.tran_line +=1
+            else:
+                self.tran_line = 0
 
     #Method for displaying MDDialog with information about alphabets in Georgian alphabets'
     #history screen

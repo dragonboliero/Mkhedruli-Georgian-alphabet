@@ -1,4 +1,5 @@
 import csv
+from inspect import _empty
 
 def load_lang_data():
     strings = {}
@@ -20,5 +21,13 @@ def load_settings():
 
     return settings
 
-data = load_settings()
-print(data)
+
+def load_transcription_texts():
+    text = []
+    with open('data/for_transcription.txt','r') as text_file:
+        for row in text_file:
+            if row.strip() !='':
+                text.append(row.strip())
+
+    return text
+

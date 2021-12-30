@@ -275,10 +275,69 @@ SManager:
                     size_hint_y:0.03
 
 
-        #Words learning screen
+        #Transcription screen
         MDBottomNavigationItem:
-            name:'words'
+            name:'transcription'
             icon:'text-box-outline'
+            TopPanel:
+                #App name string
+                MDLabel:
+                    id:apptitle_trans
+                    text:app.language_strings['app_name'][app.settings['language']]
+                    size_hint:(0.9,0.1)
+                    pos_hint:{'center_x':0.5,'center_y':0.98}
+                    halign:'center'
+                #Dropdown list with available languages
+                Spinner:
+                    id:languages_trans
+                    size_hint:(0.2,0.1)
+                    pos_hint:{'right':0.98,'center_y':0.98}
+                    text:app.current_lng
+                    text_size: self.width, None
+                    halign:'center'
+                    values:'English - en','język polski - pl','русския язык - ru'
+                    on_text: app.change_language(languages_trans.text);app.save_settings()
+            BoxLayout:
+                orientation:'vertical'                    
+                size_hint_y:0.9
+                GridLayout:
+                    rows:5
+                    MDLabel:
+                        text:app.answer_streak_string_ta
+                        size_hint_y:0.1
+                        halign:'center'
+                    MDLabel:
+                        id:trans_text
+                        text: app.transcriptions[0]
+                        size_hint_y:0.1
+                        halign:'center'
+                        #Not included in the repo
+                        #Georgian fonts can be found at:
+                        #https://fonts.google.com/
+                        font_name:app.geo_font
+                    BoxLayout:
+                        size_hint_y:0.03
+                        BoxLayout:
+                            size_hint_x:0.4
+                        MDIconButton:
+                            icon:'arrow-right-thick'
+                            pos_hint:{'center_x':0.5}
+                            on_release:app.GetTranscriptionLine()
+                            halign:'center'
+                        BoxLayout:
+                            size_hint_x:0.4
+                    BoxLayout:
+                        size_hint_y:0.04
+                        BoxLayout:
+                            size_hint_x:0.4
+                        MDTextFieldRound:
+                            halign:'center'
+                            size_hint_x:0.2
+                        BoxLayout:
+                            size_hint_x:0.4
+                    BoxLayout:
+                        size_hint_y:0.6
+
 
 
         #Screen with history of Georgian alphabets
