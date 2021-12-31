@@ -16,6 +16,7 @@ To fix:
 from kivymd.app import MDApp
 from kivy.lang.builder import Builder
 from kivy.uix.screenmanager  import Screen,ScreenManager
+from kivy.core.audio import SoundLoader
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.slider import Slider
 from kivymd.uix.dialog import MDDialog
@@ -269,6 +270,13 @@ class Mkhedruli(MDApp):
                 self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.current_lng] + ' ' + str(self.answer_streak_score_ta)
             self.root.get_screen('MainMenu').ids.TimeAttackAnswer.text=''
 
+
+    #Method for playing letter sound in letter learning mode
+    def play_letter_sound(self,letter_name):
+        #For now, for testing purposes, there's only one sound 
+        letter_sound = SoundLoader.load(f'data/audio/{letter_name}.mp3')
+        if letter_sound:
+            letter_sound.play()
 
     #Save settings to the file
     def save_settings(self):

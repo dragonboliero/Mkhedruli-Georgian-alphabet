@@ -24,7 +24,7 @@ def load_settings():
 
 def load_transcription_texts():
     text = []
-    with open('data/for_transcription.txt','r') as text_file:
+    with open('data/for_transcription.txt','r',encoding='utf-8') as text_file:
         for row in text_file:
             if row.strip() !='':
                 text.append(row.strip())

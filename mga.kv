@@ -70,15 +70,25 @@ SManager:
                     pos_hint:{'center_x':0.5}
                     radius: [dp(20),dp(20),dp(20),dp(20)]
                     spacing:"56dp"
-                    MDLabel:
-                        id: geo_letter
-                        text:app.first_geo_letter
-                        halign:'center'
-                        font_size:self.height/2
-                        #Not included in the repo
-                        #Georgian fonts can be found at:
-                        #https://fonts.google.com/
-                        font_name:app.geo_font
+                    GridLayout:
+                        rows:2
+                        MDLabel:
+                            id: geo_letter
+                            text:app.first_geo_letter
+                            halign:'center'
+                            font_size:self.height/2
+                            size_hint_y:0.95
+                            #Not included in the repo
+                            #Georgian fonts can be found at:
+                            #https://fonts.google.com/
+                            font_name:app.geo_font
+                        BoxLayout:
+                            size_hint_y:0.05
+                            BoxLayout:
+                                size_hint_x:0.9
+                            MDIconButton:
+                                icon:'volume-high'
+                                on_release:app.play_letter_sound('a')
                 BoxLayout:
                     size_hint_y:0.15 
                     #Just a placeholder button for testing purposes
