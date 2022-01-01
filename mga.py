@@ -1,15 +1,44 @@
 '''
 To do list:
-            *App design based on MDBottomNavigation
-            *Main screen with letter learning mode
-            *Time attack mode(?)
-            *Transcription screen.
-            *Screen with history of Georgian writing.
-            *Settings screen.
-            *App strings in three languages: English, Polish and Russian
-            *Achievements(?)
-To fix:
-        *Language name doesn't change on all spinners
+            *Letters learning screen:
+                - Record all sounds for Georgian letters.
+
+            *Time attack screen:
+                - Pass answer when pressing Enter/Return key.
+
+            *Transcription screen:
+                - Create a method which will change label with
+                  correct answers (text language and score).
+                - Create a method which will change background
+                  of a letter the user needs to transcribe 
+                  and make it move when the player provides 
+                  input. Additionally, the function should
+                  load a new line after inputting the last 
+                  answer in the line. 
+                - Create a label which will display % of correct
+                  answers and maybe letters per minute statistics.
+                - Fix the issue with punctuations not appearing
+                  in the source text.
+            *History of Georgian alphabets screen:
+                - Collect data and write texts corresponding to
+                  MDLabels
+
+            *Settings screen:
+                - Option to choose between male/female speaker 
+                  (if it will be possible to get the recordings) 
+                  in letter learning mode.
+                - Option to set default timer value in Time Attack
+                  mode
+                - Option to set background color for tiles in 
+                  letter learning and Time Attack modes.
+                - Option to change app background.
+            *Achievements:
+                - Create tiles, based on MDCards, for achievements 
+                  in all modes. 
+
+            *Other: 
+                - Make it so that language name changes 
+                  on all spinners.
 '''
 
 
