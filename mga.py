@@ -39,6 +39,9 @@ To do list:
             *Other: 
                 - Make it so that language name changes 
                   on all spinners.
+                - Fix a bug which prevents sounds from being played
+                  on Linux(probably also on Android). It's a known
+                  Kivy issue.
 '''
 
 
@@ -195,6 +198,7 @@ class Mkhedruli(MDApp):
 
         #Transcription mode
         self.root.get_screen('MainMenu').ids.apptitle_trans.text=self.language_strings['app_name'][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.streak_trans.text=self.answer_streak_string_ta = self.language_strings['correct_answers_ta'][self.settings['language']]+ '0'
 
         #History of Georgian alphabets
         self.root.get_screen('MainMenu').ids.apptitle_alph.text = self.language_strings['app_name'][self.settings['language']]
@@ -203,6 +207,12 @@ class Mkhedruli(MDApp):
         self.root.get_screen('MainMenu').ids.alph_asomtavruli.label_text = self.language_strings['asomtavruli'][self.settings['language']]
         self.root.get_screen('MainMenu').ids.alph_nuskhuri.label_text = self.language_strings['nuskhuri'][self.settings['language']]
         self.root.get_screen('MainMenu').ids.alph_mkhedruli.label_text = self.language_strings['mkhedruli'][self.settings['language']]
+
+        #Settings screen
+        self.root.get_screen('MainMenu').ids.apptitle_settings.text = self.language_strings['app_name'][self.settings['language']]
+
+        #Achievements screen
+        self.root.get_screen('MainMenu').ids.apptitle_achievements.text = self.language_strings['app_name'][self.settings['language']]
 
     #Function for picking random Georgian letter in letter learning mode
     def pick_georgian_letter(self,mode):

@@ -313,6 +313,7 @@ SManager:
                 GridLayout:
                     rows:5
                     MDLabel:
+                        id:streak_trans
                         text:app.answer_streak_string_ta
                         size_hint_y:0.1
                         halign:'center'
@@ -409,7 +410,43 @@ SManager:
         MDBottomNavigationItem:
             name:'settings'
             icon:'cog-outline'
+            TopPanel:
+                #App name string
+                MDLabel:
+                    id:apptitle_settings
+                    text:app.language_strings['app_name'][app.settings['language']]
+                    size_hint:(0.9,0.1)
+                    pos_hint:{'center_x':0.5,'center_y':0.98}
+                    halign:'center'
+                #Dropdown list with available languages
+                Spinner:
+                    id:languages_settings
+                    size_hint:(0.2,0.1)
+                    pos_hint:{'right':0.98,'center_y':0.98}
+                    text:app.current_lng
+                    text_size: self.width, None
+                    halign:'center'
+                    values:'English - en','język polski - pl','русския язык - ru'
+                    on_text: app.change_language(languages_settings.text);app.save_settings()
         #Achievements screen
         MDBottomNavigationItem:
             name:'achievements'
             icon:'trophy-outline'
+            TopPanel:
+                #App name string
+                MDLabel:
+                    id:apptitle_achievements
+                    text:app.language_strings['app_name'][app.settings['language']]
+                    size_hint:(0.9,0.1)
+                    pos_hint:{'center_x':0.5,'center_y':0.98}
+                    halign:'center'
+                #Dropdown list with available languages
+                Spinner:
+                    id:languages_achievements
+                    size_hint:(0.2,0.1)
+                    pos_hint:{'right':0.98,'center_y':0.98}
+                    text:app.current_lng
+                    text_size: self.width, None
+                    halign:'center'
+                    values:'English - en','język polski - pl','русския язык - ru'
+                    on_text: app.change_language(languages_achievements.text);app.save_settings()
