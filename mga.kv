@@ -428,6 +428,20 @@ SManager:
                     halign:'center'
                     values:'English - en','język polski - pl','русския язык - ru'
                     on_text: app.change_language(languages_settings.text);app.save_settings()
+            BoxLayout:
+                orientation:'vertical'                    
+                size_hint_y:0.8
+                MDGridLayout:
+                    cols:2
+                    MDLabel:
+                        id:voice_label
+                        text:app.language_strings['voice'][app.settings['language']]
+                    Switch:
+                        id:voice_switch
+                        active:app.voice_switch_state
+                        on_touch_down:app.change_voice();app.save_settings()
+            BoxLayout:
+                size_hint_y:0.07
         #Achievements screen
         MDBottomNavigationItem:
             name:'achievements'

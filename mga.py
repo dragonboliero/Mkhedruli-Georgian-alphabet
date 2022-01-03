@@ -24,9 +24,6 @@ To do list:
                   MDLabels
 
             *Settings screen:
-                - Option to choose between male/female speaker 
-                  (if it will be possible to get the recordings) 
-                  in letter learning mode.
                 - Option to set default timer value in Time Attack
                   mode
                 - Option to set background color for tiles in 
@@ -41,7 +38,7 @@ To do list:
                   on all spinners.
                 - Fix a bug which prevents sounds from being played
                   on Linux(probably also on Android). It's a known
-                  Kivy issue.
+                  Kivy issue. [Fixed with external library for now]
 '''
 
 
@@ -56,6 +53,7 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 import data_loader as dl
 import random
+from playsound import playsound
 
 load_strings = dl.load_lang_data()
 load_settings = dl.load_settings()
@@ -119,6 +117,12 @@ class Mkhedruli(MDApp):
         self.settings = load_settings
         self.current_lng = self.settings['language']
         self.language_strings = load_strings
+        #By default voice is set to male
+        self.voice_switch_state = True
+        #However if settings file says different the value needs to
+        #changed
+        if self.settings['voice'] == 'f':
+            self.voice_switch_state = False
         #Total number of lines in all texts for transcription
         self.trans_lines_total = len(transcription_texts) - 1
         self.transcriptions = list(transcription_texts)
@@ -210,6 +214,7 @@ class Mkhedruli(MDApp):
 
         #Settings screen
         self.root.get_screen('MainMenu').ids.apptitle_settings.text = self.language_strings['app_name'][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.voice_label.text = self.language_strings['voice'][self.settings['language']]
 
         #Achievements screen
         self.root.get_screen('MainMenu').ids.apptitle_achievements.text = self.language_strings['app_name'][self.settings['language']]
@@ -313,9 +318,11 @@ class Mkhedruli(MDApp):
     #Method for playing letter sound in letter learning mode
     def play_letter_sound(self,letter_name):
         #For now, for testing purposes, there's only one sound 
-        letter_sound = SoundLoader.load(f'data/audio/{letter_name}.mp3')
+        """ letter_sound = SoundLoader.load(f'data/audio/{letter_name}.mp3')
         if letter_sound:
-            letter_sound.play()
+            letter_sound.play() """
+        voice_type = self.settings['voice']
+        playsound(f'data/audio/{letter_name}{voice_type}.mp3')
 
     #Save settings to the file
     def save_settings(self):
@@ -369,7 +376,7 @@ class Mkhedruli(MDApp):
             self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
             self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
     
-
+    #Method displaying current line in transcription mode
     def GetTranscriptionLine(self):
             self.root.get_screen('MainMenu').ids.trans_text.text = transcription_texts[self.tran_line]
             if self.tran_line < self.trans_lines_total:
@@ -387,6 +394,15 @@ class Mkhedruli(MDApp):
         """
         info_dialog = MDDialog(text=dialog_text,radius=[20,7,20,7])
         info_dialog.open()
+
+    def change_voice(self):
+        if  self.voice_switch_state == True:
+             self.voice_switch_state = False
+             self.settings['voice'] = 'f'
+        else:
+             self.voice_switch_state = True
+             self.settings['voice'] = 'm'
+
 
 
 Mkhedruli().run()
