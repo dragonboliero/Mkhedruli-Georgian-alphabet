@@ -123,6 +123,10 @@ class Mkhedruli(MDApp):
         #changed
         if self.settings['voice'] == 'f':
             self.voice_switch_state = False
+        #Value used in settings screen and Time Attack mode
+        self.ta_minutes_value = int(int(self.settings['duration'])/60)
+        #String used in settings screen for Time Attack duration label
+        self.ta_default_duration = self.language_strings['ta_duration'][self.settings['language']] + str(self.ta_minutes_value)+':00'
         #Total number of lines in all texts for transcription
         self.trans_lines_total = len(transcription_texts) - 1
         self.transcriptions = list(transcription_texts)
@@ -141,10 +145,10 @@ class Mkhedruli(MDApp):
         #Total number of answers in one run of Time Attack game
         self.all_answers_ta = 0
         #Time attack initial text
-        self.time_attack_initial = self.language_strings['time_left'][self.settings['language']] + '1:00'
+        self.time_attack_initial = self.language_strings['time_left'][self.settings['language']] + str(self.ta_minutes_value)+':00'
         self.default_card_color = (0.2,0.1,1,1)
         #How much time does the player have in time attack mode for answers
-        self.time_attack_seconds = 60
+        self.time_attack_seconds = int(self.settings['duration'])
         #Copy of georgian_letters_dict that can be modified
         cp_georgian_letters_dict = dict(georgian_letters_dict)
         #Dictionary for storing user's language letters as keys and Georgian letters as values
@@ -215,6 +219,7 @@ class Mkhedruli(MDApp):
         #Settings screen
         self.root.get_screen('MainMenu').ids.apptitle_settings.text = self.language_strings['app_name'][self.settings['language']]
         self.root.get_screen('MainMenu').ids.voice_label.text = self.language_strings['voice'][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.time_attack_duration_time.text = self.language_strings['ta_duration'][self.settings['language']] + str(self.ta_minutes_value)+ ':00'
 
         #Achievements screen
         self.root.get_screen('MainMenu').ids.apptitle_achievements.text = self.language_strings['app_name'][self.settings['language']]
@@ -395,6 +400,24 @@ class Mkhedruli(MDApp):
         info_dialog = MDDialog(text=dialog_text,radius=[20,7,20,7])
         info_dialog.open()
 
+    #Method for changing value of Time Attack duration in TA screen
+    #settings screen and settings.csv file
+    def change_time_attack_duration_values(self):
+        self.ta_minutes_value = int(self.root.get_screen('MainMenu').ids.settings_time_value.value)
+        #Change values in Time Attack mode screen
+        #Initial timer value in Time Attack mode
+        self.time_attack_seconds = self.ta_minutes_value * 60
+        #Slider value
+        self.root.get_screen('MainMenu').ids.time_value.value = self.ta_minutes_value
+        #Label text
+        self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
+        #Change text displayed in settings menu
+        self.ta_default_duration = self.language_strings['ta_duration'][self.settings['language']] + str(self.ta_minutes_value)+':00'
+        self.root.get_screen('MainMenu').ids.time_attack_duration_time.text = self.ta_default_duration
+        #Change value that will be saved in settings.csv file
+        self.settings['duration'] = self.ta_minutes_value * 60
+
+    #Change voice between male/female in settings menu
     def change_voice(self):
         if  self.voice_switch_state == True:
              self.voice_switch_state = False
@@ -402,7 +425,5 @@ class Mkhedruli(MDApp):
         else:
              self.voice_switch_state = True
              self.settings['voice'] = 'm'
-
-
 
 Mkhedruli().run()

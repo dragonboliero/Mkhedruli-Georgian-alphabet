@@ -432,7 +432,9 @@ SManager:
                 orientation:'vertical'                    
                 size_hint_y:0.8
                 MDGridLayout:
+                    rows:2
                     cols:2
+                    #Voice setting
                     MDLabel:
                         id:voice_label
                         text:app.language_strings['voice'][app.settings['language']]
@@ -440,6 +442,17 @@ SManager:
                         id:voice_switch
                         active:app.voice_switch_state
                         on_touch_down:app.change_voice();app.save_settings()
+                    #Time attack duration setting
+                    MDLabel:
+                        id:time_attack_duration_time
+                        text:app.ta_default_duration
+                    ModifiedSlider:
+                        id:settings_time_value
+                        min:1
+                        max:5.99
+                        value:app.ta_minutes_value
+                        on_release:app.change_time_attack_duration_values();app.save_settings()
+                    
             BoxLayout:
                 size_hint_y:0.07
         #Achievements screen
