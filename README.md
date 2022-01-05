@@ -18,10 +18,17 @@
 #### Dependencies:
 - csv (Python built in module)<br/>
 - random (Python built in module)<br/>
+- [playsound](https://pypi.org/project/playsound/)
 - [Kivy](https://kivy.org/#home)    
 - [KivyMD](https://kivymd.readthedocs.io/en/latest/)
 <br/><br/>
 ## Screenshoots
 #### The design and functionality are not final.
-![Letters learning mode](https://i.imgur.com/VkZu8Jh.png?2)
-![Time Attack mode](https://i.imgur.com/uEQCT5l.png?1)
+![Letters learning mode](https://i.imgur.com/OV94Vai.png?1)
+![Time Attack mode](https://i.imgur.com/B1cmiO6.png?1)
+<br/>
+![Transcription mode](https://i.imgur.com/URjIHaC.png?1)
+![History and information about Georgian alphabets](https://i.imgur.com/2Yz6FO3.png?2)
+<br/>
+![Settings screen](https://i.imgur.com/JbeF9W7.png?1)
+
