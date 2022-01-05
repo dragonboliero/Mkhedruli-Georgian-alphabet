@@ -24,8 +24,6 @@ To do list:
                   MDLabels
 
             *Settings screen:
-                - Option to set default timer value in Time Attack
-                  mode
                 - Option to set background color for tiles in 
                   letter learning and Time Attack modes.
                 - Option to change app background.
@@ -117,6 +115,8 @@ class Mkhedruli(MDApp):
         self.settings = load_settings
         self.current_lng = self.settings['language']
         self.language_strings = load_strings
+        #Initial settings screen string
+        self.settings_title = self.language_strings['settings'][self.settings['language']]
         #By default voice is set to male
         self.voice_switch_state = True
         #However if settings file says different the value needs to
@@ -127,6 +127,9 @@ class Mkhedruli(MDApp):
         self.ta_minutes_value = int(int(self.settings['duration'])/60)
         #String used in settings screen for Time Attack duration label
         self.ta_default_duration = self.language_strings['ta_duration'][self.settings['language']] + str(self.ta_minutes_value)+':00'
+        #String for letter tiles background in letter learing and Time Attack
+        #modes.
+        self.tile_bg_color = self.language_strings['tile_bg_color'][self.settings['language']]
         #Total number of lines in all texts for transcription
         self.trans_lines_total = len(transcription_texts) - 1
         self.transcriptions = list(transcription_texts)
@@ -217,9 +220,11 @@ class Mkhedruli(MDApp):
         self.root.get_screen('MainMenu').ids.alph_mkhedruli.label_text = self.language_strings['mkhedruli'][self.settings['language']]
 
         #Settings screen
+        self.root.get_screen('MainMenu').ids.settings_title.text = self.language_strings['settings'][self.settings['language']]
         self.root.get_screen('MainMenu').ids.apptitle_settings.text = self.language_strings['app_name'][self.settings['language']]
         self.root.get_screen('MainMenu').ids.voice_label.text = self.language_strings['voice'][self.settings['language']]
         self.root.get_screen('MainMenu').ids.time_attack_duration_time.text = self.language_strings['ta_duration'][self.settings['language']] + str(self.ta_minutes_value)+ ':00'
+        self.root.get_screen('MainMenu').ids.letter_tiles_bg_color.text = self.language_strings['tile_bg_color'][self.settings['language']]
 
         #Achievements screen
         self.root.get_screen('MainMenu').ids.apptitle_achievements.text = self.language_strings['app_name'][self.settings['language']]
@@ -425,5 +430,20 @@ class Mkhedruli(MDApp):
         else:
              self.voice_switch_state = True
              self.settings['voice'] = 'm'
+
+    #Makes tiles with color selection visible in settings screen
+    def colors_visible(self):
+        self.root.get_screen('MainMenu').ids.yellow.opacity = 1
+        self.root.get_screen('MainMenu').ids.green.opacity = 1
+        self.root.get_screen('MainMenu').ids.blue.opacity = 1
+        self.root.get_screen('MainMenu').ids.red.opacity = 1
+
+    #Method used after selecting tile background color in settings menu
+    def select_color(self):
+        #Makes tiles with color selection invisible in settings screen
+        self.root.get_screen('MainMenu').ids.yellow.opacity = 0
+        self.root.get_screen('MainMenu').ids.green.opacity = 0
+        self.root.get_screen('MainMenu').ids.blue.opacity = 0
+        self.root.get_screen('MainMenu').ids.red.opacity = 0
 
 Mkhedruli().run()
