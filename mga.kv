@@ -63,6 +63,7 @@ SManager:
 
                 #Card displaying random Georgian letter
                 MDCard:
+                    id:geo_letter_card
                     size_hint:(0.35,0.15)
                     pos_hint_y: 0.3
                     halign:'center'
@@ -241,6 +242,7 @@ SManager:
                         text:app.answer_streak_string_ta
                 #Card displaying random Georgian letter
                 MDCard:
+                    id:geo_letter_ta_card
                     size_hint:(0.35,0.15)
                     pos_hint_y: 0.3
                     halign:'center'
@@ -446,34 +448,34 @@ SManager:
                         size_hint_x:0.02
                     MDCard:
                         id:yellow
-                        md_bg_color: (252/255,186/255,3/255,1)
+                        md_bg_color: (0.98,0.73,0.01,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
-                        on_release:app.select_color()
+                        on_release:app.select_color(self.md_bg_color);app.save_settings()
                     BoxLayout:
                         size_hint_x:0.02
                     MDCard:
                         id:green
-                        md_bg_color: (28/255,252/255,3/255,1)
+                        md_bg_color: (0.11,0.99,0.01,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
-                        on_release:app.select_color()
+                        on_release:app.select_color(self.md_bg_color);app.save_settings()
                     BoxLayout:
                         size_hint_x:0.02
                     MDCard:
                         id:blue
-                        md_bg_color: (3/255,165/255,252/255,1)
+                        md_bg_color: (0.01,0.64,0.98,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
-                        on_release:app.select_color()
+                        on_release:app.select_color(self.md_bg_color);app.save_settings()
                     BoxLayout:
                         size_hint_x:0.02
                     MDCard:
                         id:red
-                        md_bg_color: (252/255,3/255,53/255,1)
+                        md_bg_color: (0.99,0.01,0.21,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
-                        on_release:app.select_color()
+                        on_release:app.select_color(self.md_bg_color);app.save_settings()
                     BoxLayout:
                         size_hint_x:0.02
                 #Grid with settings
@@ -498,6 +500,7 @@ SManager:
                         max:5.99
                         value:app.ta_minutes_value
                         on_release:app.change_time_attack_duration_values();app.save_settings()
+                    #Tiles background color
                     MDLabel:
                         id:letter_tiles_bg_color
                         text:app.tile_bg_color
@@ -509,9 +512,10 @@ SManager:
                             size_hint:(0.6,0.6)
                             orientation:'horizontal'
                             MDCard:
+                                id:current_tile_bg_color
                                 md_bg_color: app.default_card_color
                                 radius: [dp(25),dp(25),dp(25),dp(25)]
-                                on_release:app.colors_visible()
+                                on_release:app.colors_visible();
                         BoxLayout:
                             size_hint:(1,0.2)
 

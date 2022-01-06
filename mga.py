@@ -37,6 +37,8 @@ To do list:
                 - Fix a bug which prevents sounds from being played
                   on Linux(probably also on Android). It's a known
                   Kivy issue. [Fixed with external library for now]
+                - Male voice switch is activated whenever there is a 
+                  click action anywhere in settings screen.
 '''
 
 
@@ -149,7 +151,10 @@ class Mkhedruli(MDApp):
         self.all_answers_ta = 0
         #Time attack initial text
         self.time_attack_initial = self.language_strings['time_left'][self.settings['language']] + str(self.ta_minutes_value)+':00'
-        self.default_card_color = (0.2,0.1,1,1)
+        #Read tiles background color from file and convert it from str to float
+        color_values = self.settings['tile_bg_color_val'].split(',')
+        float_color_values = [float(x) for x in color_values]
+        self.default_card_color = tuple(float_color_values)
         #How much time does the player have in time attack mode for answers
         self.time_attack_seconds = int(self.settings['duration'])
         #Copy of georgian_letters_dict that can be modified
@@ -439,11 +444,32 @@ class Mkhedruli(MDApp):
         self.root.get_screen('MainMenu').ids.red.opacity = 1
 
     #Method used after selecting tile background color in settings menu
-    def select_color(self):
+    def select_color(self,color):
         #Makes tiles with color selection invisible in settings screen
         self.root.get_screen('MainMenu').ids.yellow.opacity = 0
         self.root.get_screen('MainMenu').ids.green.opacity = 0
         self.root.get_screen('MainMenu').ids.blue.opacity = 0
         self.root.get_screen('MainMenu').ids.red.opacity = 0
+        #Change color of currently selected color in settings menu
+        self.root.get_screen('MainMenu').ids.current_tile_bg_color.md_bg_color = color
+        #Change value of variable with default tile background color
+        self.default_card_color = color
+        #Set new color value which will be saved to settings file
+        self.settings['tile_bg_color_val'] = f"\"{color[0]},{color[1]},{color[2]},{color[3]}\""
+        print(self.settings['tile_bg_color_val'])
+        #Change color of tiles in all screens
+        #Letters learning mode
+        self.root.get_screen('MainMenu').ids.geo_letter_card.md_bg_color = color
+        self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = color
+        self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = color
+        self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = color
+        self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = color
+        #Time Atack mode
+        self.root.get_screen('MainMenu').ids.geo_letter_ta_card.md_bg_color = color
+        #History of Georgian alphabets screen
+        self.root.get_screen('MainMenu').ids.alph_general.md_bg_color = color
+        self.root.get_screen('MainMenu').ids.alph_asomtavruli.md_bg_color = color
+        self.root.get_screen('MainMenu').ids.alph_nuskhuri.md_bg_color = color
+        self.root.get_screen('MainMenu').ids.alph_mkhedruli.md_bg_color = color
 
 Mkhedruli().run()
