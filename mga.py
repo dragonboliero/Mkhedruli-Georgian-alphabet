@@ -2,10 +2,8 @@
 To do list:
             *Letters learning screen:
                 - Record all sounds for Georgian letters.
-
             *Time attack screen:
                 - Pass answer when pressing Enter/Return key.
-
             *Transcription screen:
                 - Create a method which will change label with
                   correct answers (text language and score).
@@ -21,16 +19,12 @@ To do list:
                   in the source text.
             *History of Georgian alphabets screen:
                 - Collect data and write texts corresponding to
-                  MDLabels
-
+                  MDLabels.
             *Settings screen:
-                - Option to set background color for tiles in 
-                  letter learning and Time Attack modes.
                 - Option to change app background.
             *Achievements:
                 - Create tiles, based on MDCards, for achievements 
                   in all modes. 
-
             *Other: 
                 - Make it so that language name changes 
                   on all spinners.
@@ -49,6 +43,7 @@ from kivy.core.audio import SoundLoader
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.slider import Slider
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.card import MDCard
 from kivy.core.window import Window
 from kivy.clock import Clock
 import data_loader as dl
@@ -87,6 +82,10 @@ ModifiedSlider allows using on_release event instead of on_touch up
 code created by hchandad
 https://gist.github.com/hchandad/b71ed0e977e6d345bcb8
 '''
+
+class ScreenBackground(MDCard):
+    pass
+
 class ModifiedSlider(Slider):
     def __init__(self, **kwargs):
         self.register_event_type('on_release')
@@ -101,11 +100,12 @@ class ModifiedSlider(Slider):
             self.dispatch('on_release')
             return True
 
+class TopPanel(GridLayout):
+    pass
+
 class SManager(ScreenManager):
     pass
 class MainMenu(Screen):
-    pass
-class TopPanel(GridLayout):
     pass
 
 
@@ -119,6 +119,8 @@ class Mkhedruli(MDApp):
         self.language_strings = load_strings
         #Initial settings screen string
         self.settings_title = self.language_strings['settings'][self.settings['language']]
+        #Initial screen background color
+        self.screen_background_color = (0.3,0.5,0.7,1)
         #By default voice is set to male
         self.voice_switch_state = True
         #However if settings file says different the value needs to
@@ -132,6 +134,8 @@ class Mkhedruli(MDApp):
         #String for letter tiles background in letter learing and Time Attack
         #modes.
         self.tile_bg_color = self.language_strings['tile_bg_color'][self.settings['language']]
+        #String for screen background setting in settings screen
+        self.screen_bg_color_string = self.language_strings['screen_bg_color'][self.settings['language']]
         #Total number of lines in all texts for transcription
         self.trans_lines_total = len(transcription_texts) - 1
         self.transcriptions = list(transcription_texts)
@@ -230,6 +234,7 @@ class Mkhedruli(MDApp):
         self.root.get_screen('MainMenu').ids.voice_label.text = self.language_strings['voice'][self.settings['language']]
         self.root.get_screen('MainMenu').ids.time_attack_duration_time.text = self.language_strings['ta_duration'][self.settings['language']] + str(self.ta_minutes_value)+ ':00'
         self.root.get_screen('MainMenu').ids.letter_tiles_bg_color.text = self.language_strings['tile_bg_color'][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.screen_bg_color_set_label.text = self.language_strings['screen_bg_color'][self.settings['language']]
 
         #Achievements screen
         self.root.get_screen('MainMenu').ids.apptitle_achievements.text = self.language_strings['app_name'][self.settings['language']]

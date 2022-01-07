@@ -1,10 +1,16 @@
 SManager:
     MainMenu:
-    
+
+<ScreenBackground>
+    size_hint: (1,1)
+    pos_hint: {"center_x":0.5,"center_y":0.5}
+    md_bg_color: app.screen_background_color
+
 #Values for buttons inside of Spinner
 <SpinnerOption>
     text_size:self.width,None
     halign:'center'
+
 #Top bar for all menus    
 <TopPanel>
     cols:2
@@ -35,6 +41,8 @@ SManager:
         MDBottomNavigationItem:
             name:'letters'
             icon:'alphabetical'
+            ScreenBackground:
+                id:ll_background
             TopPanel:
                 #App name string
                 MDLabel:
@@ -200,6 +208,8 @@ SManager:
         MDBottomNavigationItem:
             name:'time-attack'
             icon:'clock'
+            ScreenBackground:
+                id:ta_background
             TopPanel:
                 #App name string
                 MDLabel:
@@ -291,6 +301,8 @@ SManager:
         MDBottomNavigationItem:
             name:'transcription'
             icon:'text-box-outline'
+            ScreenBackground:
+                id:trans_background
             TopPanel:
                 #App name string
                 MDLabel:
@@ -357,6 +369,8 @@ SManager:
         MDBottomNavigationItem:
             name:'history'
             icon:'book-open-blank-variant'
+            ScreenBackground:
+                id:hi_background
             TopPanel:
                 #App name string
                 MDLabel:
@@ -412,6 +426,8 @@ SManager:
         MDBottomNavigationItem:
             name:'settings'
             icon:'cog-outline'
+            ScreenBackground:
+                id:set_background
             TopPanel:
                 #App name string
                 MDLabel:
@@ -480,7 +496,7 @@ SManager:
                         size_hint_x:0.02
                 #Grid with settings
                 MDGridLayout:
-                    rows:3
+                    rows:4
                     cols:2
                     #Voice setting
                     MDLabel:
@@ -518,6 +534,23 @@ SManager:
                                 on_release:app.colors_visible();
                         BoxLayout:
                             size_hint:(1,0.2)
+                    #Screen background color
+                    MDLabel:
+                        id:screen_bg_color_set_label
+                        text:app.screen_bg_color_string
+                    BoxLayout:
+                        orientation:'vertical'
+                        BoxLayout:
+                            size_hint:(1,0.2)
+                        BoxLayout:
+                            size_hint:(0.6,0.6)
+                            orientation:'horizontal'
+                            MDCard:
+                                id:current_screen_bg_color
+                                md_bg_color: app.screen_background_color
+                                radius: [dp(25),dp(25),dp(25),dp(25)]
+                        BoxLayout:
+                            size_hint:(1,0.2)
 
                     
             BoxLayout:
@@ -526,6 +559,8 @@ SManager:
         MDBottomNavigationItem:
             name:'achievements'
             icon:'trophy-outline'
+            ScreenBackground:
+                id:achi_background
             TopPanel:
                 #App name string
                 MDLabel:
