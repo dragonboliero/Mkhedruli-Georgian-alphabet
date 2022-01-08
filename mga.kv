@@ -13,9 +13,18 @@ SManager:
 
 #Top bar for all menus    
 <TopPanel>
-    cols:2
+    cols:3
     size_hint_y:0.10
     pos_hint:{'center_y':0.951}
+    canvas.before:
+        Color:
+            rgb:1,1,1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Image:
+        source:'data/logo.png'
+        size_hint_x:0.2
 
 <AlphaCard@MDCard>:
     id:alcard
@@ -48,7 +57,7 @@ SManager:
                 MDLabel:
                     id:apptitle
                     text:app.language_strings['app_name'][app.settings['language']]
-                    size_hint:(0.9,0.1)
+                    size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
                 #Dropdown list with available languages
