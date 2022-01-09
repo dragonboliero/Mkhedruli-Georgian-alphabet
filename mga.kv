@@ -42,6 +42,22 @@ SManager:
         text:root.label_text
         halign:'center'
 
+<AchievementCard@MDCard>:
+    id:achcard
+    md_bg_color: app.default_card_color
+    size_hint_x:0.5
+    padding: dp(15)
+    spacing: dp(15)
+    radius: [dp(25),dp(25),dp(25),dp(25)]
+    ripple_behavior: False
+    source:""
+    elevation:30
+    orientation:'horizontal'
+    label_text:''
+    MDLabel:
+        text:root.label_text
+        halign:'center'
+
 
 <MainMenu>
     name: 'MainMenu'
@@ -588,3 +604,41 @@ SManager:
                     halign:'center'
                     values:'English - en','język polski - pl','русския язык - ru'
                     on_text: app.change_language(languages_achievements.text);app.save_settings()
+            ScrollView:
+                size_hint_y:0.9
+                do_scroll_y:True
+                GridLayout:
+                    spacing:[0,5]
+                    size:(root.width,root.height)
+                    size_hint_x:None
+                    size_hint_y:3
+                    padding:[root.width*0.15,root.height*0.01,root.width*0.15,root.height*0.01]
+                    
+                    cols:1
+                    AchievementCard:
+                        label_text:'Achievement1'
+                    AchievementCard:
+                        label_text:'Achievement2'
+                    AchievementCard:
+                        label_text:'Achievement3'
+                    AchievementCard:
+                        label_text:'Achievement4'
+                    AchievementCard:
+                        label_text:'Achievement5'
+                    AchievementCard:
+                        label_text:'Achievement6'
+                    AchievementCard:
+                        label_text:'Achievement1'
+                    AchievementCard:
+                        label_text:'Achievement2'
+                    AchievementCard:
+                        label_text:'Achievement3'
+                    AchievementCard:
+                        label_text:'Achievement4'
+                    AchievementCard:
+                        label_text:'Achievement5'
+                    AchievementCard:
+                        label_text:'Achievement6'
+
+            BoxLayout:
+                size_hint_y:0.07
