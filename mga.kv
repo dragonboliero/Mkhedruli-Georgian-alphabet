@@ -240,7 +240,7 @@ SManager:
                 MDLabel:
                     id:apptitle_ta
                     text:app.language_strings['app_name'][app.settings['language']]
-                    size_hint:(0.9,0.1)
+                    size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
                 #Dropdown list with available languages
@@ -266,7 +266,7 @@ SManager:
                         id:time_value
                         min:1
                         max:5.99
-                        value:1
+                        value:app.ta_minutes_value
                         hint:True
                         hint_text_color:(1,0,0,1)
                         size_hint:(0.5,root.height)
@@ -333,7 +333,7 @@ SManager:
                 MDLabel:
                     id:apptitle_trans
                     text:app.language_strings['app_name'][app.settings['language']]
-                    size_hint:(0.9,0.1)
+                    size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
                 #Dropdown list with available languages
@@ -401,7 +401,7 @@ SManager:
                 MDLabel:
                     id:apptitle_alph
                     text:app.language_strings['app_name'][app.settings['language']]
-                    size_hint:(0.9,0.1)
+                    size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
                 #Dropdown list with available languages
@@ -458,7 +458,7 @@ SManager:
                 MDLabel:
                     id:apptitle_settings
                     text:app.language_strings['app_name'][app.settings['language']]
-                    size_hint:(0.9,0.1)
+                    size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
                 #Dropdown list with available languages
@@ -493,6 +493,7 @@ SManager:
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
                         on_release:app.select_color(self.md_bg_color);app.save_settings()
+                        disabled:True
                     BoxLayout:
                         size_hint_x:0.02
                     MDCard:
@@ -501,6 +502,7 @@ SManager:
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
                         on_release:app.select_color(self.md_bg_color);app.save_settings()
+                        disabled:True
                     BoxLayout:
                         size_hint_x:0.02
                     MDCard:
@@ -509,6 +511,7 @@ SManager:
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
                         on_release:app.select_color(self.md_bg_color);app.save_settings()
+                        disabled:True
                     BoxLayout:
                         size_hint_x:0.02
                     MDCard:
@@ -517,6 +520,7 @@ SManager:
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
                         on_release:app.select_color(self.md_bg_color);app.save_settings()
+                        disabled:True
                     BoxLayout:
                         size_hint_x:0.02
                 #Grid with settings
@@ -591,7 +595,7 @@ SManager:
                 MDLabel:
                     id:apptitle_achievements
                     text:app.language_strings['app_name'][app.settings['language']]
-                    size_hint:(0.9,0.1)
+                    size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
                 #Dropdown list with available languages

@@ -348,7 +348,10 @@ class Mkhedruli(MDApp):
     def save_settings(self):
         with open('data/settings.csv','w') as settings_file:
             for key,value in self.settings.items():
-                settings_value = f'{key},{value}\n'
+                if key == 'tile_bg_color_val':
+                    settings_value = f'{key},\"{value}\"\n'
+                else:
+                    settings_value = f'{key},{value}\n'
                 settings_file.write(settings_value)  
 
 
@@ -441,8 +444,17 @@ class Mkhedruli(MDApp):
              self.voice_switch_state = True
              self.settings['voice'] = 'm'
 
+    #Makes MDCards with colors in settings screen clickable/unclickable
+    def color_tiles_clickable(self,onOff):
+        self.root.get_screen('MainMenu').ids.yellow.disabled = onOff
+        self.root.get_screen('MainMenu').ids.green.disabled = onOff
+        self.root.get_screen('MainMenu').ids.blue.disabled = onOff
+        self.root.get_screen('MainMenu').ids.red.disabled = onOff
+
     #Makes tiles with color selection visible in settings screen
     def colors_visible(self):
+        #Make MDCards with colors 'clickable'
+        self.color_tiles_clickable(False)
         self.root.get_screen('MainMenu').ids.yellow.opacity = 1
         self.root.get_screen('MainMenu').ids.green.opacity = 1
         self.root.get_screen('MainMenu').ids.blue.opacity = 1
@@ -450,6 +462,8 @@ class Mkhedruli(MDApp):
 
     #Method used after selecting tile background color in settings menu
     def select_color(self,color):
+        #Make tiles with color selection 'unclickable'
+        self.color_tiles_clickable(True)
         #Makes tiles with color selection invisible in settings screen
         self.root.get_screen('MainMenu').ids.yellow.opacity = 0
         self.root.get_screen('MainMenu').ids.green.opacity = 0
@@ -460,7 +474,7 @@ class Mkhedruli(MDApp):
         #Change value of variable with default tile background color
         self.default_card_color = color
         #Set new color value which will be saved to settings file
-        self.settings['tile_bg_color_val'] = f"\"{color[0]},{color[1]},{color[2]},{color[3]}\""
+        self.settings['tile_bg_color_val'] = f"{color[0]},{color[1]},{color[2]},{color[3]}"
         print(self.settings['tile_bg_color_val'])
         #Change color of tiles in all screens
         #Letters learning mode
