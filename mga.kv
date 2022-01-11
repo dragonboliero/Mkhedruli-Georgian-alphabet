@@ -488,7 +488,7 @@ SManager:
                     BoxLayout:
                         size_hint_x:0.02
                     MDCard:
-                        id:yellow
+                        id:bg_one
                         md_bg_color: (0.98,0.73,0.01,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
@@ -497,7 +497,7 @@ SManager:
                     BoxLayout:
                         size_hint_x:0.02
                     MDCard:
-                        id:green
+                        id:bg_two
                         md_bg_color: (0.11,0.99,0.01,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
@@ -506,7 +506,7 @@ SManager:
                     BoxLayout:
                         size_hint_x:0.02
                     MDCard:
-                        id:blue
+                        id:bg_three
                         md_bg_color: (0.01,0.64,0.98,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
@@ -515,7 +515,7 @@ SManager:
                     BoxLayout:
                         size_hint_x:0.02
                     MDCard:
-                        id:red
+                        id:bg_four
                         md_bg_color: (0.99,0.01,0.21,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
@@ -560,7 +560,7 @@ SManager:
                                 id:current_tile_bg_color
                                 md_bg_color: app.default_card_color
                                 radius: [dp(25),dp(25),dp(25),dp(25)]
-                                on_release:app.colors_visible();
+                                on_release:app.colors_visible('tile');
                         BoxLayout:
                             size_hint:(1,0.2)
                     #Screen background color
@@ -578,6 +578,7 @@ SManager:
                                 id:current_screen_bg_color
                                 md_bg_color: app.screen_background_color
                                 radius: [dp(25),dp(25),dp(25),dp(25)]
+                                on_release:app.colors_visible('screen');
                         BoxLayout:
                             size_hint:(1,0.2)
 

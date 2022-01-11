@@ -445,30 +445,49 @@ class Mkhedruli(MDApp):
              self.settings['voice'] = 'm'
 
     #Makes MDCards with colors in settings screen clickable/unclickable
-    def color_tiles_clickable(self,onOff):
-        self.root.get_screen('MainMenu').ids.yellow.disabled = onOff
-        self.root.get_screen('MainMenu').ids.green.disabled = onOff
-        self.root.get_screen('MainMenu').ids.blue.disabled = onOff
-        self.root.get_screen('MainMenu').ids.red.disabled = onOff
+    def color_tiles_unclickable(self,onOff):
+        self.root.get_screen('MainMenu').ids.bg_one.disabled = onOff
+        self.root.get_screen('MainMenu').ids.bg_two.disabled = onOff
+        self.root.get_screen('MainMenu').ids.bg_three.disabled = onOff
+        self.root.get_screen('MainMenu').ids.bg_four.disabled = onOff
+
+    #Color of MDCards for choosing color in settings screen
+    def tiles_background_colors(self,bg_type):
+        tiles_bg = [(0.98,0.73,0.01,1),(0.11,0.99,0.01,1),(0.01,0.64,0.98,1),(0.99,0.01,0.21,1)]
+        screen_bg = [(0.31,0.39,0.2,1),(0.31,0.24,0.78,1),(0.99,0.2,0.41,1)]
+        
+        if bg_type == 'tile':
+            self.root.get_screen('MainMenu').ids.bg_one.md_bg_color = tiles_bg[0]
+            self.root.get_screen('MainMenu').ids.bg_two.md_bg_color = tiles_bg[1]
+            self.root.get_screen('MainMenu').ids.bg_three.md_bg_color = tiles_bg[2]
+            self.root.get_screen('MainMenu').ids.bg_four.md_bg_color = tiles_bg[3]
+        if bg_type == 'screen':
+            self.root.get_screen('MainMenu').ids.bg_one.md_bg_color = 0.4,0.73,0.2,1
+            self.root.get_screen('MainMenu').ids.bg_two.md_bg_color = screen_bg[0]
+            self.root.get_screen('MainMenu').ids.bg_three.md_bg_color = screen_bg[1]
+            self.root.get_screen('MainMenu').ids.bg_four.md_bg_color = screen_bg[2]
 
     #Makes tiles with color selection visible in settings screen
-    def colors_visible(self):
+    def colors_visible(self,bg_type):
+        #Change MDCard color depending on whether it was clicked from tile
+        #or screen background setting
+        self.tiles_background_colors(bg_type)
         #Make MDCards with colors 'clickable'
-        self.color_tiles_clickable(False)
-        self.root.get_screen('MainMenu').ids.yellow.opacity = 1
-        self.root.get_screen('MainMenu').ids.green.opacity = 1
-        self.root.get_screen('MainMenu').ids.blue.opacity = 1
-        self.root.get_screen('MainMenu').ids.red.opacity = 1
+        self.color_tiles_unclickable(False)
+        self.root.get_screen('MainMenu').ids.bg_one.opacity = 1
+        self.root.get_screen('MainMenu').ids.bg_two.opacity = 1
+        self.root.get_screen('MainMenu').ids.bg_three.opacity = 1
+        self.root.get_screen('MainMenu').ids.bg_four.opacity = 1
 
     #Method used after selecting tile background color in settings menu
     def select_color(self,color):
         #Make tiles with color selection 'unclickable'
-        self.color_tiles_clickable(True)
+        self.color_tiles_unclickable(True)
         #Makes tiles with color selection invisible in settings screen
-        self.root.get_screen('MainMenu').ids.yellow.opacity = 0
-        self.root.get_screen('MainMenu').ids.green.opacity = 0
-        self.root.get_screen('MainMenu').ids.blue.opacity = 0
-        self.root.get_screen('MainMenu').ids.red.opacity = 0
+        self.root.get_screen('MainMenu').ids.bg_one.opacity = 0
+        self.root.get_screen('MainMenu').ids.bg_two.opacity = 0
+        self.root.get_screen('MainMenu').ids.bg_three.opacity = 0
+        self.root.get_screen('MainMenu').ids.bg_four.opacity = 0
         #Change color of currently selected color in settings menu
         self.root.get_screen('MainMenu').ids.current_tile_bg_color.md_bg_color = color
         #Change value of variable with default tile background color

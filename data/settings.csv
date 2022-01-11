@@ -1,5 +1,5 @@
 setting_name,value
 language,pl
-voice,m
+voice,f
 duration,180
-tile_bg_color_val,"0.01,0.64,0.98,1.0"
+tile_bg_color_val,"0.98,0.73,0.01,1.0"
