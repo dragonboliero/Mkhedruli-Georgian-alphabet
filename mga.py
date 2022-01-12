@@ -4,6 +4,7 @@ To do list:
                 - Record all sounds for Georgian letters.
             *Time attack screen:
                 - Pass answer when pressing Enter/Return key.
+                - Reset everything when switching to other screen
             *Transcription screen:
                 - Create a method which will change label with
                   correct answers (text language and score).
@@ -20,8 +21,6 @@ To do list:
             *History of Georgian alphabets screen:
                 - Collect data and write texts corresponding to
                   MDLabels.
-            *Settings screen:
-                - Option to change app background.
             *Achievements:
                 - Create tiles, based on MDCards, for achievements 
                   in all modes. 
@@ -117,10 +116,10 @@ class Mkhedruli(MDApp):
         self.settings = load_settings
         self.current_lng = self.settings['language']
         self.language_strings = load_strings
+        #Variable storing type of background color to change
+        self.bg_color_type = 'tile'
         #Initial settings screen string
         self.settings_title = self.language_strings['settings'][self.settings['language']]
-        #Initial screen background color
-        self.screen_background_color = (0.3,0.5,0.7,1)
         #By default voice is set to male
         self.voice_switch_state = True
         #However if settings file says different the value needs to
@@ -155,6 +154,10 @@ class Mkhedruli(MDApp):
         self.all_answers_ta = 0
         #Time attack initial text
         self.time_attack_initial = self.language_strings['time_left'][self.settings['language']] + str(self.ta_minutes_value)+':00'
+        #Read screen background color from file and convert it from str to float
+        screen_bg_color_values = self.settings['screen_bg_color_val'].split(',')
+        float_screen_bg_color_values = [float(x) for x in screen_bg_color_values]
+        self.screen_background_color = tuple(float_screen_bg_color_values)
         #Read tiles background color from file and convert it from str to float
         color_values = self.settings['tile_bg_color_val'].split(',')
         float_color_values = [float(x) for x in color_values]
@@ -348,7 +351,7 @@ class Mkhedruli(MDApp):
     def save_settings(self):
         with open('data/settings.csv','w') as settings_file:
             for key,value in self.settings.items():
-                if key == 'tile_bg_color_val':
+                if key == 'tile_bg_color_val' or 'screen_bg_color_val':
                     settings_value = f'{key},\"{value}\"\n'
                 else:
                     settings_value = f'{key},{value}\n'
@@ -461,11 +464,13 @@ class Mkhedruli(MDApp):
             self.root.get_screen('MainMenu').ids.bg_two.md_bg_color = tiles_bg[1]
             self.root.get_screen('MainMenu').ids.bg_three.md_bg_color = tiles_bg[2]
             self.root.get_screen('MainMenu').ids.bg_four.md_bg_color = tiles_bg[3]
+            self.bg_color_type  = 'tile'
         if bg_type == 'screen':
             self.root.get_screen('MainMenu').ids.bg_one.md_bg_color = 0.4,0.73,0.2,1
             self.root.get_screen('MainMenu').ids.bg_two.md_bg_color = screen_bg[0]
             self.root.get_screen('MainMenu').ids.bg_three.md_bg_color = screen_bg[1]
             self.root.get_screen('MainMenu').ids.bg_four.md_bg_color = screen_bg[2]
+            self.bg_color_type = 'screen'
 
     #Makes tiles with color selection visible in settings screen
     def colors_visible(self,bg_type):
@@ -488,26 +493,40 @@ class Mkhedruli(MDApp):
         self.root.get_screen('MainMenu').ids.bg_two.opacity = 0
         self.root.get_screen('MainMenu').ids.bg_three.opacity = 0
         self.root.get_screen('MainMenu').ids.bg_four.opacity = 0
-        #Change color of currently selected color in settings menu
-        self.root.get_screen('MainMenu').ids.current_tile_bg_color.md_bg_color = color
-        #Change value of variable with default tile background color
-        self.default_card_color = color
-        #Set new color value which will be saved to settings file
-        self.settings['tile_bg_color_val'] = f"{color[0]},{color[1]},{color[2]},{color[3]}"
-        print(self.settings['tile_bg_color_val'])
-        #Change color of tiles in all screens
-        #Letters learning mode
-        self.root.get_screen('MainMenu').ids.geo_letter_card.md_bg_color = color
-        self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = color
-        self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = color
-        self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = color
-        self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = color
-        #Time Atack mode
-        self.root.get_screen('MainMenu').ids.geo_letter_ta_card.md_bg_color = color
-        #History of Georgian alphabets screen
-        self.root.get_screen('MainMenu').ids.alph_general.md_bg_color = color
-        self.root.get_screen('MainMenu').ids.alph_asomtavruli.md_bg_color = color
-        self.root.get_screen('MainMenu').ids.alph_nuskhuri.md_bg_color = color
-        self.root.get_screen('MainMenu').ids.alph_mkhedruli.md_bg_color = color
+        if self.bg_color_type =='tile':
+            #Change color of currently selected tiles backround color in settings menu
+            self.root.get_screen('MainMenu').ids.current_tile_bg_color.md_bg_color = color
+            #Change value of variable with default tile background color
+            self.default_card_color = color
+            #Set new color value which will be saved to settings file
+            self.settings['tile_bg_color_val'] = f"{color[0]},{color[1]},{color[2]},{color[3]}"
+            #Change color of tiles in all screens
+            #Letters learning mode
+            self.root.get_screen('MainMenu').ids.geo_letter_card.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.second_letter.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = color
+            #Time Atack mode
+            self.root.get_screen('MainMenu').ids.geo_letter_ta_card.md_bg_color = color
+            #History of Georgian alphabets screen
+            self.root.get_screen('MainMenu').ids.alph_general.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.alph_asomtavruli.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.alph_nuskhuri.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.alph_mkhedruli.md_bg_color = color
+        if self.bg_color_type == 'screen':
+            #Change color of currently selected screen backround color in settings menu
+            self.root.get_screen('MainMenu').ids.current_screen_bg_color.md_bg_color = color
+            #Change value of variable with default screen background color
+            self.screen_background_color = color
+            #Set new color value which will be saved to settings file
+            self.settings['screen_bg_color_val'] = f"{color[0]},{color[1]},{color[2]},{color[3]}"
+            #Change screen background colors
+            self.root.get_screen('MainMenu').ids.ll_background.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.ta_background.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.trans_background.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.hi_background.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.set_background.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.achi_background.md_bg_color = color
 
 Mkhedruli().run()
