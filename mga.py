@@ -334,7 +334,7 @@ class Mkhedruli(MDApp):
             self.all_answers_ta +=1
             if answer == georgian_letters_dict[geo_letter][self.settings['language']]:
                 self.answer_streak_score_ta +=1
-                self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.current_lng] + ' ' + str(self.answer_streak_score_ta)
+                self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.settings['language']] + ' ' + str(self.answer_streak_score_ta)
             self.root.get_screen('MainMenu').ids.TimeAttackAnswer.text=''
 
 
@@ -356,6 +356,18 @@ class Mkhedruli(MDApp):
                 else:
                     settings_value = f'{key},{value}\n'
                 settings_file.write(settings_value)  
+
+    #resets all values upon entering TimeAttack mode
+    def Reset_TimeAttack(self):
+        try:
+            self.time_attack_clock.cancel()
+        except:
+            print('Clock not running')
+        minutes = str(int(int(self.settings['duration']) / 60))
+        self.root.get_screen('MainMenu').ids.timer.text =  self.language_strings['time_left'][self.settings['language']] + minutes + ':00'
+        self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.settings['language']] + '0'
+        self.pick_georgian_letter(1)
+
 
 
     #Method starting timer in Time Attack mode
@@ -529,4 +541,6 @@ class Mkhedruli(MDApp):
             self.root.get_screen('MainMenu').ids.set_background.md_bg_color = color
             self.root.get_screen('MainMenu').ids.achi_background.md_bg_color = color
 
+    def test(self):
+        print("It's working")
 Mkhedruli().run()
