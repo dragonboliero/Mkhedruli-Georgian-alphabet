@@ -1,10 +1,11 @@
 '''
+To work on Windows playsound 1.2.2 library is required. The latest 
+version - 1.3 - doesn't play sound.
 To do list:
             *Letters learning screen:
                 - Record all sounds for Georgian letters.
             *Time attack screen:
                 - Pass answer when pressing Enter/Return key.
-                - Reset everything when switching to other screen
             *Transcription screen:
                 - Create a method which will change label with
                   correct answers (text language and score).
@@ -136,8 +137,10 @@ class Mkhedruli(MDApp):
         #String for screen background setting in settings screen
         self.screen_bg_color_string = self.language_strings['screen_bg_color'][self.settings['language']]
         #Total number of lines in all texts for transcription
+        self.trans_pos_counter = 1
         self.trans_lines_total = len(transcription_texts) - 1
         self.transcriptions = list(transcription_texts)
+        self.current_transcription_line = f"[color=fcba03]{self.transcriptions[0][0]}[/color]{self.transcriptions[0][1:]}"
         #Counter for current transcription line
         self.tran_line = 1
         #Timer state in Time Attack mode
@@ -413,7 +416,13 @@ class Mkhedruli(MDApp):
         if self.counting_down == False:
             self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
             self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
-    
+
+    #Method moving highlighted letter in transcription mode
+    def HighlightTransLetter(self):
+        if self.trans_pos_counter < len(self.current_transcription_line)-1:
+            self.root.get_screen('MainMenu').ids.trans_text.text = f"[color=fcba03]{self.transcriptions[0][self.trans_pos_counter]}[/color]{self.transcriptions[0][self.trans_pos_counter+1:]}"
+        self.trans_pos_counter += 1
+
     #Method displaying current line in transcription mode
     def GetTranscriptionLine(self):
             self.root.get_screen('MainMenu').ids.trans_text.text = transcription_texts[self.tran_line]

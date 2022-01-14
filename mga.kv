@@ -352,16 +352,17 @@ SManager:
                 size_hint_y:0.9
                 GridLayout:
                     rows:5
-                    MDLabel:
+                    MDLabel:   
                         id:streak_trans
                         text:app.answer_streak_string_ta
                         size_hint_y:0.1
                         halign:'center'
-                    MDLabel:
+                    Label:
                         id:trans_text
-                        text: app.transcriptions[0]
+                        text: app.current_transcription_line
                         size_hint_y:0.1
                         halign:'center'
+                        markup:True
                         #Not included in the repo
                         #Georgian fonts can be found at:
                         #https://fonts.google.com/
@@ -373,7 +374,8 @@ SManager:
                         MDIconButton:
                             icon:'arrow-right-thick'
                             pos_hint:{'center_x':0.5}
-                            on_release:app.GetTranscriptionLine()
+                            on_release:app.HighlightTransLetter()
+                            #app.GetTranscriptionLine()
                             halign:'center'
                         BoxLayout:
                             size_hint_x:0.4
