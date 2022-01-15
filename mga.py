@@ -136,9 +136,12 @@ class Mkhedruli(MDApp):
         self.tile_bg_color = self.language_strings['tile_bg_color'][self.settings['language']]
         #String for screen background setting in settings screen
         self.screen_bg_color_string = self.language_strings['screen_bg_color'][self.settings['language']]
-        #Total number of lines in all texts for transcription
+        #Initial position in transcription string
         self.trans_pos_counter = 1
+        #Total number of lines in all texts for transcription
         self.trans_lines_total = len(transcription_texts) - 1
+        #Current line number
+        self.trans_current_line_number = 0 
         self.transcriptions = list(transcription_texts)
         self.current_transcription_line = f"[color=fcba03]{self.transcriptions[0][0]}[/color]{self.transcriptions[0][1:]}"
         #Counter for current transcription line
@@ -419,9 +422,19 @@ class Mkhedruli(MDApp):
 
     #Method moving highlighted letter in transcription mode
     def HighlightTransLetter(self):
-        if self.trans_pos_counter < len(self.current_transcription_line)-1:
-            self.root.get_screen('MainMenu').ids.trans_text.text = f"[color=fcba03]{self.transcriptions[0][self.trans_pos_counter]}[/color]{self.transcriptions[0][self.trans_pos_counter+1:]}"
-        self.trans_pos_counter += 1
+        #If it's not the last letter in current line 
+        if self.trans_pos_counter < len(self.transcriptions[self.trans_current_line_number]):
+            self.root.get_screen('MainMenu').ids.trans_text.text = f"[color=fcba03]{self.transcriptions[self.trans_current_line_number][self.trans_pos_counter]}[/color]{self.transcriptions[self.trans_current_line_number][self.trans_pos_counter+1:]}"
+            self.trans_pos_counter += 1
+        #If it was the last letter
+        if self.trans_pos_counter == len(self.transcriptions[self.trans_current_line_number]):
+            self.trans_pos_counter = 0
+            #If it's not the last line from available pool
+            if self.trans_current_line_number < len(self.transcriptions):
+                self.trans_current_line_number += 1
+            #If it was the last line from available pool, go back to the beginning
+            if self.trans_current_line_number == len(self.transcriptions):
+                self.trans_current_line_number = 0
 
     #Method displaying current line in transcription mode
     def GetTranscriptionLine(self):
