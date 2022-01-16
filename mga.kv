@@ -374,7 +374,7 @@ SManager:
                         MDIconButton:
                             icon:'arrow-right-thick'
                             pos_hint:{'center_x':0.5}
-                            on_release:app.HighlightTransLetter()
+                            on_release:app.check_answer(app.trans_current_letter,root.ids.trans_answer.text,0,2);app.HighlightTransLetter()
                             #app.GetTranscriptionLine()
                             halign:'center'
                         BoxLayout:
@@ -384,6 +384,7 @@ SManager:
                         BoxLayout:
                             size_hint_x:0.4
                         MDTextFieldRound:
+                            id:trans_answer
                             halign:'center'
                             size_hint_x:0.2
                         BoxLayout:

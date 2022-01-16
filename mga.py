@@ -7,16 +7,10 @@ To do list:
             *Time attack screen:
                 - Pass answer when pressing Enter/Return key.
             *Transcription screen:
-                - Create a method which will change label with
-                  correct answers (text language and score).
-                - Create a method which will change background
-                  of a letter the user needs to transcribe 
-                  and make it move when the player provides 
-                  input. Additionally, the function should
-                  load a new line after inputting the last 
-                  answer in the line. 
                 - Create a label which will display % of correct
                   answers and maybe letters per minute statistics.
+                - Find a way to show to the user that space is 
+                  currently selected.
                 - Fix the issue with punctuations not appearing
                   in the source text.
             *History of Georgian alphabets screen:
@@ -146,12 +140,20 @@ class Mkhedruli(MDApp):
         self.current_transcription_line = f"[color=fcba03]{self.transcriptions[0][0]}[/color]{self.transcriptions[0][1:]}"
         #Counter for current transcription line
         self.tran_line = 1
+        #Current letter to transcribe in transcription mode
+        self.trans_current_letter = self.transcriptions[0][0]
+        #Score counter for transcription mode
+        self.trans_score = 0
+        #Letter position in current line / for answer checking purposes
+        self.trans_index = 0
+        #Current line number / for answer checking purposes
+        self.trans_check_line = 0
         #Timer state in Time Attack mode
         self.counting_down = False
         #Time Attack clock object
         self.time_attack_clock = 0
         #Initial Time Attack correct answers string
-        self.answer_streak_string_ta = self.language_strings['correct_answers_ta'][self.current_lng] + ' 0' 
+        self.answer_streak_string_ta = self.language_strings['correct_answers_ta'][self.settings['language']] + ' 0' 
         #Variable for storing whether it's the first quiz in Time Attack mode
         self.first_run_ta = False
         #Initial numer of correct answers in Time Attack mode
@@ -343,6 +345,29 @@ class Mkhedruli(MDApp):
                 self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.settings['language']] + ' ' + str(self.answer_streak_score_ta)
             self.root.get_screen('MainMenu').ids.TimeAttackAnswer.text=''
 
+        #Transcription mode
+        if mode == 2:
+            #Check if currently selected sign is a Georgian letter
+            if self.trans_current_letter in georgian_letters_dict:
+                #If it is check if user input was correct and if so add point
+                if answer == georgian_letters_dict[self.trans_current_letter][self.settings['language']]:
+                    self.trans_score += 1
+                    self.root.get_screen('MainMenu').ids.streak_trans.text = self.language_strings['correct_answers_ta'][self.settings['language']] + str(self.trans_score)
+            #Move to next letter if it's not the end of the current line 
+            if self.trans_index < len(self.transcriptions[self.trans_check_line]):
+                self.trans_index +=1
+            #If it is, reset index position to 0
+            if self.trans_index == len(self.transcriptions[self.trans_check_line]):
+                self.trans_index = 0
+                #And increment line number
+                if self.trans_check_line < len(self.transcriptions):
+                    self.trans_check_line +=1 
+                #Or go to the beginning if it was a last line
+                if self.trans_check_line == len(self.transcriptions):
+                    self.trans_check_line = 0
+            self.trans_current_letter  = self.transcriptions[self.trans_check_line][self.trans_index]
+                
+
 
     #Method for playing letter sound in letter learning mode
     def play_letter_sound(self,letter_name):
@@ -425,7 +450,7 @@ class Mkhedruli(MDApp):
         #If it's not the last letter in current line 
         if self.trans_pos_counter < len(self.transcriptions[self.trans_current_line_number]):
             self.root.get_screen('MainMenu').ids.trans_text.text = f"[color=fcba03]{self.transcriptions[self.trans_current_line_number][self.trans_pos_counter]}[/color]{self.transcriptions[self.trans_current_line_number][self.trans_pos_counter+1:]}"
-            self.trans_pos_counter += 1
+            self.trans_pos_counter += 1   
         #If it was the last letter
         if self.trans_pos_counter == len(self.transcriptions[self.trans_current_line_number]):
             self.trans_pos_counter = 0
