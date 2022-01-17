@@ -445,6 +445,19 @@ class Mkhedruli(MDApp):
             self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
             self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
 
+    #Method for resetting values in Transcription mode
+    def Reset_Transcription(self):
+        #Reset variables
+        self.trans_index = 0
+        self.trans_check_line = 0
+        self.trans_pos_counter = 1
+        self.trans_current_line_number = 0
+        self.trans_score = 0
+        self.trans_current_letter = self.transcriptions[0][0]
+        #Update strings in Transcription screen
+        self.root.get_screen('MainMenu').ids.streak_trans.text = self.language_strings['correct_answers_ta'][self.settings['language']] + str(self.trans_score)
+        self.root.get_screen('MainMenu').ids.trans_text.text = f"[color=fcba03]{self.transcriptions[0][0]}[/color]{self.transcriptions[0][1:]}"
+
     #Method moving highlighted letter in transcription mode
     def HighlightTransLetter(self):
         #If it's not the last letter in current line 
@@ -460,15 +473,7 @@ class Mkhedruli(MDApp):
             #If it was the last line from available pool, go back to the beginning
             if self.trans_current_line_number == len(self.transcriptions):
                 self.trans_current_line_number = 0
-
-    #Method displaying current line in transcription mode
-    def GetTranscriptionLine(self):
-            self.root.get_screen('MainMenu').ids.trans_text.text = transcription_texts[self.tran_line]
-            if self.tran_line < self.trans_lines_total:
-                self.tran_line +=1
-            else:
-                self.tran_line = 0
-
+                
     #Method for displaying MDDialog with information about alphabets in Georgian alphabets'
     #history screen
     def history_screen_dialog(self,card_name,card_text):

@@ -327,6 +327,7 @@ SManager:
         MDBottomNavigationItem:
             name:'transcription'
             icon:'text-box-outline'
+            on_tab_release:app.Reset_Transcription()
             ScreenBackground:
                 id:trans_background
             TopPanel:
@@ -375,7 +376,6 @@ SManager:
                             icon:'arrow-right-thick'
                             pos_hint:{'center_x':0.5}
                             on_release:app.check_answer(app.trans_current_letter,root.ids.trans_answer.text,0,2);app.HighlightTransLetter()
-                            #app.GetTranscriptionLine()
                             halign:'center'
                         BoxLayout:
                             size_hint_x:0.4
