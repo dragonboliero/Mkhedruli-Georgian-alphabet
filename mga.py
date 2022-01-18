@@ -7,8 +7,6 @@ To do list:
             *Time attack screen:
                 - Pass answer when pressing Enter/Return key.
             *Transcription screen:
-                - Create a label which will display % of correct
-                  answers and maybe letters per minute statistics.
                 - Find a way to show to the user that space is 
                   currently selected.
                 - Fix the issue with punctuations not appearing
@@ -144,6 +142,12 @@ class Mkhedruli(MDApp):
         self.trans_current_letter = self.transcriptions[0][0]
         #Score counter for transcription mode
         self.trans_score = 0
+        #User answers in transcription mode
+        self.trans_answers = 0
+        #Correct answers percentage in transcription mode
+        self.trans_percentage = 0
+        #String for percentage of correct answers in transcription mode
+        self.trans_percentage_string = self.language_strings['perc_ca_ta'][self.settings['language']] + str(self.trans_percentage)
         #Letter position in current line / for answer checking purposes
         self.trans_index = 0
         #Current line number / for answer checking purposes
@@ -353,6 +357,8 @@ class Mkhedruli(MDApp):
                 if answer == georgian_letters_dict[self.trans_current_letter][self.settings['language']]:
                     self.trans_score += 1
                     self.root.get_screen('MainMenu').ids.streak_trans.text = self.language_strings['correct_answers_ta'][self.settings['language']] + str(self.trans_score)
+                #Increment answers counter
+                self.trans_answers +=1
             #Move to next letter if it's not the end of the current line 
             if self.trans_index < len(self.transcriptions[self.trans_check_line]):
                 self.trans_index +=1
@@ -366,6 +372,9 @@ class Mkhedruli(MDApp):
                 if self.trans_check_line == len(self.transcriptions):
                     self.trans_check_line = 0
             self.trans_current_letter  = self.transcriptions[self.trans_check_line][self.trans_index]
+            #Calculate percentage of correct answers and update label
+            self.trans_percentage = int((self.trans_score / self.trans_answers) * 100)
+            self.root.get_screen('MainMenu').ids.percentage_trans.text = self.language_strings['perc_ca_ta'][self.settings['language']] + str(self.trans_percentage)
                 
 
 
@@ -454,9 +463,12 @@ class Mkhedruli(MDApp):
         self.trans_current_line_number = 0
         self.trans_score = 0
         self.trans_current_letter = self.transcriptions[0][0]
+        self.trans_percentage = 0
+        self.trans_answers = 0
         #Update strings in Transcription screen
         self.root.get_screen('MainMenu').ids.streak_trans.text = self.language_strings['correct_answers_ta'][self.settings['language']] + str(self.trans_score)
         self.root.get_screen('MainMenu').ids.trans_text.text = f"[color=fcba03]{self.transcriptions[0][0]}[/color]{self.transcriptions[0][1:]}"
+        self.root.get_screen('MainMenu').ids.percentage_trans.text = self.language_strings['perc_ca_ta'][self.settings['language']] + str(self.trans_percentage)
 
     #Method moving highlighted letter in transcription mode
     def HighlightTransLetter(self):

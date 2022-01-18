@@ -353,15 +353,21 @@ SManager:
                 size_hint_y:0.9
                 GridLayout:
                     rows:5
-                    MDLabel:   
-                        id:streak_trans
-                        text:app.answer_streak_string_ta
+                    GridLayout:
+                        cols: 2
                         size_hint_y:0.1
-                        halign:'center'
+                        MDLabel:   
+                            id:streak_trans
+                            text:app.answer_streak_string_ta
+                            halign:'center'
+                        MDLabel:
+                            id:percentage_trans
+                            text:app.trans_percentage_string
                     Label:
                         id:trans_text
                         text: app.current_transcription_line
                         size_hint_y:0.1
+                        font_size:'22sp'
                         halign:'center'
                         markup:True
                         #Not included in the repo
