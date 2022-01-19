@@ -233,7 +233,8 @@ class Mkhedruli(MDApp):
 
         #Transcription mode
         self.root.get_screen('MainMenu').ids.apptitle_trans.text=self.language_strings['app_name'][self.settings['language']]
-        self.root.get_screen('MainMenu').ids.streak_trans.text=self.answer_streak_string_ta = self.language_strings['correct_answers_ta'][self.settings['language']]+ '0'
+        self.root.get_screen('MainMenu').ids.streak_trans.text=self.answer_streak_string_ta = self.language_strings['correct_answers_ta'][self.settings['language']]+ str(self.trans_score)
+        self.root.get_screen('MainMenu').ids.percentage_trans.text=self.language_strings['perc_ca_ta'][self.settings['language']] + str(self.trans_percentage)
 
         #History of Georgian alphabets
         self.root.get_screen('MainMenu').ids.apptitle_alph.text = self.language_strings['app_name'][self.settings['language']]
