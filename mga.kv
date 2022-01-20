@@ -317,6 +317,7 @@ SManager:
                         MDTextFieldRound:
                             id:TimeAttackAnswer
                             halign:'center'
+                            on_text_validate: app.check_answer(root.ids.geo_letter_ta.text,root.ids.TimeAttackAnswer.text,0,1);app.pick_georgian_letter(1);app.TimeAttackClock()
                     BoxLayout:
                         size_hint:0.4,None
                 BoxLayout:
@@ -393,6 +394,7 @@ SManager:
                             id:trans_answer
                             halign:'center'
                             size_hint_x:0.2
+                            on_text_validate:app.check_answer(app.trans_current_letter,root.ids.trans_answer.text,0,2);app.HighlightTransLetter()
                         BoxLayout:
                             size_hint_x:0.4
                     BoxLayout:

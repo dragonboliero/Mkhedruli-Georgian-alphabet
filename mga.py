@@ -5,7 +5,6 @@ To do list:
             *Letters learning screen:
                 - Record all sounds for Georgian letters.
             *Time attack screen:
-                - Pass answer when pressing Enter/Return key.
             *Transcription screen:
                 - Find a way to show to the user that space is 
                   currently selected.
