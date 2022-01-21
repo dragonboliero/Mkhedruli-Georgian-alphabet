@@ -1,5 +1,5 @@
 '''
-To work on Windows playsound 1.2.2 library is required. The latest 
+playsound 1.2.2 library is required to work on Windows. The latest 
 version - 1.3 - doesn't play sound.
 To do list:
             *Letters learning screen:
@@ -16,6 +16,7 @@ To do list:
             *Achievements:
                 - Create tiles, based on MDCards, for achievements 
                   in all modes. 
+                - Make tiles change color when color is changed in settings
             *Other: 
                 - Make it so that language name changes 
                   on all spinners.
@@ -68,15 +69,16 @@ georgian_letters_dict = {
 #Resolution which simulates mobile phone
 Window.size = (405,900)
 
+
+#Modified KivyMD elements
+class ScreenBackground(MDCard):
+    pass
+
 '''
 ModifiedSlider allows using on_release event instead of on_touch up
 code created by hchandad
 https://gist.github.com/hchandad/b71ed0e977e6d345bcb8
 '''
-
-class ScreenBackground(MDCard):
-    pass
-
 class ModifiedSlider(Slider):
     def __init__(self, **kwargs):
         self.register_event_type('on_release')
@@ -94,21 +96,24 @@ class ModifiedSlider(Slider):
 class TopPanel(GridLayout):
     pass
 
+#KivyMD screens
 class SManager(ScreenManager):
     pass
 class MainMenu(Screen):
     pass
 
-
 #Main app
 class Mkhedruli(MDApp):
-    def build(self):    
+    def build(self):  
         #Font with Georgian letters
         self.geo_font = '../geo_font.ttf'
+        #Variable holding app settings
         self.settings = load_settings
-        self.current_lng = self.settings['language']
+        #Variable holding strings used in the app
         self.language_strings = load_strings
-        #Variable storing type of background color to change
+        #Variable holding currently selected language //Used for initialization in kv file
+        self.current_lng = self.settings['language']
+        #Variable storing type of background color to change in settings screen
         self.bg_color_type = 'tile'
         #Initial settings screen string
         self.settings_title = self.language_strings['settings'][self.settings['language']]
@@ -118,32 +123,31 @@ class Mkhedruli(MDApp):
         #changed
         if self.settings['voice'] == 'f':
             self.voice_switch_state = False
-        #Value used in settings screen and Time Attack mode
+        #Value used in settings screen and Time Attack mode for displaying duration time in minutes
         self.ta_minutes_value = int(int(self.settings['duration'])/60)
         #String used in settings screen for Time Attack duration label
         self.ta_default_duration = self.language_strings['ta_duration'][self.settings['language']] + str(self.ta_minutes_value)+':00'
-        #String for letter tiles background in letter learing and Time Attack
-        #modes.
+        #String for tiles background setting in settings screen.
         self.tile_bg_color = self.language_strings['tile_bg_color'][self.settings['language']]
         #String for screen background setting in settings screen
         self.screen_bg_color_string = self.language_strings['screen_bg_color'][self.settings['language']]
         #Initial position in transcription string
         self.trans_pos_counter = 1
-        #Total number of lines in all texts for transcription
+        #Total number of lines of transcription text
         self.trans_lines_total = len(transcription_texts) - 1
-        #Current line number
+        #Current line number in transcribed text
         self.trans_current_line_number = 0 
+        #Transcription text converted to separate lines
         self.transcriptions = list(transcription_texts)
+        #Current line displayed in Transcription mode with current letter highlighted 
         self.current_transcription_line = f"[color=fcba03]{self.transcriptions[0][0]}[/color]{self.transcriptions[0][1:]}"
-        #Counter for current transcription line
-        self.tran_line = 1
         #Current letter to transcribe in transcription mode
         self.trans_current_letter = self.transcriptions[0][0]
         #Score counter for transcription mode
         self.trans_score = 0
-        #User answers in transcription mode
+        #Total number of user answers in Transcription mode duiring current session
         self.trans_answers = 0
-        #Correct answers percentage in transcription mode
+        #Correct answers percentage in Transcription mode during current session
         self.trans_percentage = 0
         #String for percentage of correct answers in transcription mode
         self.trans_percentage_string = self.language_strings['perc_ca_ta'][self.settings['language']] + str(self.trans_percentage)
@@ -446,7 +450,7 @@ class Mkhedruli(MDApp):
             #Reset correct answers score and number of answers
             self.answer_streak_score_ta = 0
             self.all_answers_ta = 0
-            self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.current_lng] + ' ' + str(self.answer_streak_score_ta)  
+            self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.settings['language']] + ' ' + str(self.answer_streak_score_ta)  
 
     #Method swapping current MDLabel time value with slider value in Time Attack mode
     def ConvertTimeSliderValueToSeconds(self):
