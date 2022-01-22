@@ -15,8 +15,7 @@ To do list:
                   MDLabels.
             *Achievements:
                 - Create tiles, based on MDCards, for achievements 
-                  in all modes. 
-                - Make tiles change color when color is changed in settings
+                  in all modes.
             *Other: 
                 - Make it so that language name changes 
                   on all spinners.
@@ -594,6 +593,18 @@ class Mkhedruli(MDApp):
             self.root.get_screen('MainMenu').ids.alph_asomtavruli.md_bg_color = color
             self.root.get_screen('MainMenu').ids.alph_nuskhuri.md_bg_color = color
             self.root.get_screen('MainMenu').ids.alph_mkhedruli.md_bg_color = color
+            #Achievements screen
+            self.root.get_screen('MainMenu').ids.achievement_ll1.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.achievement_ll2.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.achievement_ll3.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.achievement_ta1.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.achievement_ta2.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.achievement_ta3.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.achievement_trans1.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.achievement_trans2.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.achievement_trans3.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.achievement_history.md_bg_color = color
+
         if self.bg_color_type == 'screen':
             #Change color of currently selected screen backround color in settings menu
             self.root.get_screen('MainMenu').ids.current_screen_bg_color.md_bg_color = color
