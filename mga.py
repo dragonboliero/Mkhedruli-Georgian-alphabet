@@ -44,6 +44,7 @@ from playsound import playsound
 load_strings = dl.load_lang_data()
 load_settings = dl.load_settings()
 transcription_texts = dl.load_transcription_texts()
+achievement_texts = dl.load_achievements()
 
 georgian_letters_dict = {
 'ა':{'en':'a','pl':'a','ru':'а'},'ბ':{'en':'b','pl':'b','ru':'б'},
@@ -619,6 +620,10 @@ class Mkhedruli(MDApp):
             self.root.get_screen('MainMenu').ids.hi_background.md_bg_color = color
             self.root.get_screen('MainMenu').ids.set_background.md_bg_color = color
             self.root.get_screen('MainMenu').ids.achi_background.md_bg_color = color
+
+    def display_achievement_info(self,name):
+        achievement_info = MDDialog(title=achievement_texts[name][self.settings['language']][0],text=achievement_texts[name][self.settings['language']][1])
+        achievement_info.open()
 
     def test(self):
         print("It's working")

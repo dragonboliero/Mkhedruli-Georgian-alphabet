@@ -31,3 +31,12 @@ def load_transcription_texts():
 
     return text
 
+def load_achievements():
+    achievements = {}
+    with open('data/achievements.csv','r') as raw_achievements:
+        csv_data = csv.reader(raw_achievements)
+        for row in csv_data:
+            name,achievement_name_en,achievement_name_pl,achievement_name_ru,text_en,text_pl,text_ru = row
+            achievements[name] = {'en':[achievement_name_en,text_en],'pl':[achievement_name_pl,text_pl],'ru':[achievement_name_ru,text_ru]}
+
+    return achievements
