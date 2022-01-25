@@ -113,6 +113,7 @@ class Mkhedruli(MDApp):
         self.language_strings = load_strings
         #Variable holding currently selected language //Used for initialization in kv file
         self.current_lng = self.settings['language']
+        self.achievement_strings = achievement_texts
         #Variable storing type of background color to change in settings screen
         self.bg_color_type = 'tile'
         #Initial settings screen string
@@ -257,6 +258,16 @@ class Mkhedruli(MDApp):
 
         #Achievements screen
         self.root.get_screen('MainMenu').ids.apptitle_achievements.text = self.language_strings['app_name'][self.settings['language']]
+        self.root.get_screen('MainMenu').ids.achievement_ll1.label_text = self.achievement_strings['achievement_ll1'][self.settings['language']][0]
+        self.root.get_screen('MainMenu').ids.achievement_ll2.label_text = self.achievement_strings['achievement_ll2'][self.settings['language']][0]
+        self.root.get_screen('MainMenu').ids.achievement_ll3.label_text = self.achievement_strings['achievement_ll3'][self.settings['language']][0]
+        self.root.get_screen('MainMenu').ids.achievement_ta1.label_text = self.achievement_strings['achievement_ta1'][self.settings['language']][0]
+        self.root.get_screen('MainMenu').ids.achievement_ta2.label_text = self.achievement_strings['achievement_ta2'][self.settings['language']][0]
+        self.root.get_screen('MainMenu').ids.achievement_ta3.label_text = self.achievement_strings['achievement_ta3'][self.settings['language']][0]
+        self.root.get_screen('MainMenu').ids.achievement_trans1.label_text = self.achievement_strings['achievement_trans1'][self.settings['language']][0]
+        self.root.get_screen('MainMenu').ids.achievement_trans2.label_text = self.achievement_strings['achievement_trans2'][self.settings['language']][0]
+        self.root.get_screen('MainMenu').ids.achievement_trans3.label_text = self.achievement_strings['achievement_trans3'][self.settings['language']][0]
+        self.root.get_screen('MainMenu').ids.achievement_history.label_text = self.achievement_strings['achievement_history'][self.settings['language']][0]
 
     #Function for picking random Georgian letter in letter learning mode
     def pick_georgian_letter(self,mode):
