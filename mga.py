@@ -45,6 +45,7 @@ load_strings = dl.load_lang_data()
 load_settings = dl.load_settings()
 transcription_texts = dl.load_transcription_texts()
 achievement_texts = dl.load_achievements()
+achievement_status = dl.load_achievements_status()
 
 georgian_letters_dict = {
 'ა':{'en':'a','pl':'a','ru':'а'},'ბ':{'en':'b','pl':'b','ru':'б'},
@@ -113,7 +114,10 @@ class Mkhedruli(MDApp):
         self.language_strings = load_strings
         #Variable holding currently selected language //Used for initialization in kv file
         self.current_lng = self.settings['language']
+        #Variable holding dictionary with achievements texts
         self.achievement_strings = achievement_texts
+        #Variable holding status of achievements
+        self.achievements_status = achievement_status
         #Variable storing type of background color to change in settings screen
         self.bg_color_type = 'tile'
         #Initial settings screen string
@@ -631,11 +635,42 @@ class Mkhedruli(MDApp):
             self.root.get_screen('MainMenu').ids.hi_background.md_bg_color = color
             self.root.get_screen('MainMenu').ids.set_background.md_bg_color = color
             self.root.get_screen('MainMenu').ids.achi_background.md_bg_color = color
-
+    
+    #Displays achievement name and description in MDDialog when clicked in achievements screen
     def display_achievement_info(self,name):
         achievement_info = MDDialog(title=achievement_texts[name][self.settings['language']][0],text=achievement_texts[name][self.settings['language']][1])
         achievement_info.open()
 
+    #Method for checking conditions required to achieve history achievement.
+    def check_achievement_history(self,tile_name):
+        #Check if the tiles in History screen were clicked before
+        if tile_name == 'alph_general':
+           if  self.achievements_status['achievement_history'][1][0] == '0':
+               self.achievements_status['achievement_history'][1] = 'g'+self.achievements_status['achievement_history'][1][1:]
+        if tile_name == 'alph_asomtavruli':
+           if  self.achievements_status['achievement_history'][1][1] == '0':
+               self.achievements_status['achievement_history'][1] = self.achievements_status['achievement_history'][1][0] + 'a'+ self.achievements_status['achievement_history'][1][2:]
+        if tile_name == 'alph_nuskhuri':
+           if  self.achievements_status['achievement_history'][1][2] == '0':
+               self.achievements_status['achievement_history'][1] = self.achievements_status['achievement_history'][1][0:2] + 'n' + self.achievements_status['achievement_history'][1][3]
+        if tile_name == 'alph_mkhedruli':
+           if  self.achievements_status['achievement_history'][1][3] == '0':
+               self.achievements_status['achievement_history'][1] = self.achievements_status['achievement_history'][1][0:3] + 'm'
+        #If the achievement wasn't achieved yet
+        if self.achievements_status['achievement_history'][0] == '0':
+            #Check if all tiles were clicked
+            if self.achievements_status['achievement_history'][1] == 'ganm':
+                #If yes change achievement status and display congratulations message
+                self.achievements_status['achievement_history'][0] = '1'
+                achievement_history_congrats = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_history'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_history'][self.settings['language']][1]) 
+                achievement_history_congrats.open()
+        #Save the achievement status to file
+        with open('data/achievement_status.csv','w') as new_achievements_status:
+            for achievement_name,values in self.achievements_status.items():
+                new_status = f'{achievement_name},{values[0]},{values[1]}\n'
+                new_achievements_status.write(new_status)
+                
     def test(self):
         print("It's working")
+
 Mkhedruli().run()

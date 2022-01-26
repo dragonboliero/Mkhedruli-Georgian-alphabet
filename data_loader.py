@@ -40,3 +40,13 @@ def load_achievements():
             achievements[name] = {'en':[achievement_name_en,text_en],'pl':[achievement_name_pl,text_pl],'ru':[achievement_name_ru,text_ru]}
 
     return achievements
+
+def load_achievements_status():
+    achievements_status = {}
+    with open('data/achievement_status.csv','r') as raw_achievements_status:
+        csv_data = csv.reader(raw_achievements_status)
+        for row in csv_data:
+            achievement_name,status,condition_counter = row
+            achievements_status[achievement_name] = [status,condition_counter]
+
+    return achievements_status
