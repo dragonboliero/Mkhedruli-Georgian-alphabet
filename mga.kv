@@ -670,6 +670,7 @@ SManager:
                         on_release:app.display_achievement_info('achievement_trans3');
                     AchievementCard:
                         id:achievement_history
+                        disabled: app.achievement_history_clickability
                         label_text:app.achievement_strings['achievement_history'][app.current_lng][0]
                         on_release:app.display_achievement_info('achievement_history');
 

@@ -218,6 +218,12 @@ class Mkhedruli(MDApp):
         for geo_letter in range(4):
             self.letters_pos[geo_letter].append(self.letters_dict[self.shuffled_first_letters[geo_letter]])
         
+        
+        #Setting up 'clickability' of achievement tiles in Achievement screen
+        self.achievement_history_clickability = True
+        if self.achievements_status['achievement_history'][0] == '1':
+            self.achievement_history_clickability = False
+
         app_uix = Builder.load_file('mga.kv')
         return app_uix
 
@@ -664,6 +670,7 @@ class Mkhedruli(MDApp):
                 self.achievements_status['achievement_history'][0] = '1'
                 achievement_history_congrats = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_history'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_history'][self.settings['language']][1]) 
                 achievement_history_congrats.open()
+                self.root.get_screen('MainMenu').ids.achievement_history.disabled = False
         #Save the achievement status to file
         with open('data/achievement_status.csv','w') as new_achievements_status:
             for achievement_name,values in self.achievements_status.items():
