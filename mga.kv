@@ -634,14 +634,17 @@ SManager:
                     cols:1
                     AchievementCard:
                         id:achievement_ll1
+                        disabled:app.achievement_ll1_notclickable
                         label_text:app.achievement_strings['achievement_ll1'][app.current_lng][0]
                         on_release:app.display_achievement_info('achievement_ll1');
                     AchievementCard:
                         id:achievement_ll2
+                        disabled:app.achievement_ll2_notclickable
                         label_text:app.achievement_strings['achievement_ll2'][app.current_lng][0]
                         on_release:app.display_achievement_info('achievement_ll2');
                     AchievementCard:
                         id:achievement_ll3
+                        disabled:app.achievement_ll3_notclickable
                         label_text:app.achievement_strings['achievement_ll3'][app.current_lng][0]
                         on_release:app.display_achievement_info('achievement_ll3');
                     AchievementCard:
@@ -670,7 +673,7 @@ SManager:
                         on_release:app.display_achievement_info('achievement_trans3');
                     AchievementCard:
                         id:achievement_history
-                        disabled: app.achievement_history_clickability
+                        disabled: app.achievement_history_notclickable
                         label_text:app.achievement_strings['achievement_history'][app.current_lng][0]
                         on_release:app.display_achievement_info('achievement_history');
 

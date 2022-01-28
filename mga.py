@@ -218,11 +218,24 @@ class Mkhedruli(MDApp):
         for geo_letter in range(4):
             self.letters_pos[geo_letter].append(self.letters_dict[self.shuffled_first_letters[geo_letter]])
         
-        
+        #Variable holding number of learned letters        
+        self.number_learned_letters = int(self.achievements_status['achievement_letters'][0])
+        #Variable holding all learned letters
+        self.learned_letters = self.achievements_status['achievement_letters'][1]
+        self.achievement_ll1_notclickable = True
+        if int(self.achievements_status['achievement_letters'][0]) >= 10:
+            self.achievement_ll1_notclickable = False
+        self.achievement_ll2_notclickable = True
+        if int(self.achievements_status['achievement_letters'][0]) >= 20:
+            self.achievement_ll2_notclickable = False
+        self.achievement_ll3_notclickable = True
+        if int(self.achievements_status['achievement_letters'][0]) == 33:
+            self.achievement_ll3_notclickable = False
+
         #Setting up 'clickability' of achievement tiles in Achievement screen
-        self.achievement_history_clickability = True
+        self.achievement_history_notclickable = True
         if self.achievements_status['achievement_history'][0] == '1':
-            self.achievement_history_clickability = False
+            self.achievement_history_notclickable = False
 
         app_uix = Builder.load_file('mga.kv')
         return app_uix
@@ -356,6 +369,7 @@ class Mkhedruli(MDApp):
                     self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = (0,1,0,1)
                 if card_id == 3:
                     self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = (0,1,0,1)
+                self.check_achievement_letters(geo_letter)
             else:
                 if card_id == 0:
                     self.root.get_screen('MainMenu').ids.first_letter.md_bg_color = (1,0,0,1)
@@ -646,6 +660,36 @@ class Mkhedruli(MDApp):
     def display_achievement_info(self,name):
         achievement_info = MDDialog(title=achievement_texts[name][self.settings['language']][0],text=achievement_texts[name][self.settings['language']][1])
         achievement_info.open()
+    
+    def check_achievement_letters(self,letter):
+        """ print(self.learned_letters)
+        print(self.number_learned_letters) """
+        if letter not in self.learned_letters:
+            self.learned_letters = self.learned_letters + letter
+            self.achievements_status['achievement_letters'][1] = self.learned_letters
+            self.number_learned_letters +=1
+            self.achievements_status['achievement_letters'][0] = str(self.number_learned_letters)
+            if self.number_learned_letters == 10:
+                achievement_letters_contrats = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_ll1'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_ll1'][self.settings['language']][1])
+                achievement_letters_contrats.open()
+                self.root.get_screen('MainMenu').ids.achievement_ll1.disabled = False
+            if self.number_learned_letters == 20:
+                achievement_letters_contrats = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_ll2'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_ll2'][self.settings['language']][1])
+                achievement_letters_contrats.open()
+                self.root.get_screen('MainMenu').ids.achievement_ll2.disabled = False
+            if self.number_learned_letters == 33:
+                achievement_letters_contrats = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_ll3'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_ll3'][self.settings['language']][1])
+                achievement_letters_contrats.open()
+                self.achievement_ll3_notclickable = False
+                self.root.get_screen('MainMenu').ids.achievement_ll3.disabled = False
+            with open('data/achievement_status.csv','w',encoding='utf8') as new_achievements_status:
+                for achievement_name,values in self.achievements_status.items():
+                    new_status = f'{achievement_name},{values[0]},{values[1]}\n'
+                    new_achievements_status.write(new_status)
+        print('after')
+        print(self.learned_letters)
+        print(self.number_learned_letters)
+
 
     #Method for checking conditions required to achieve history achievement.
     def check_achievement_history(self,tile_name):
@@ -672,7 +716,7 @@ class Mkhedruli(MDApp):
                 achievement_history_congrats.open()
                 self.root.get_screen('MainMenu').ids.achievement_history.disabled = False
         #Save the achievement status to file
-        with open('data/achievement_status.csv','w') as new_achievements_status:
+        with open('data/achievement_status.csv','w',encoding='utf8') as new_achievements_status:
             for achievement_name,values in self.achievements_status.items():
                 new_status = f'{achievement_name},{values[0]},{values[1]}\n'
                 new_achievements_status.write(new_status)
