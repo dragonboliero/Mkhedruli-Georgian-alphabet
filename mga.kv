@@ -92,7 +92,16 @@ SManager:
                 orientation:'vertical'
                 size_hint_y:0.8
                 BoxLayout:
-                    size_hint_y:0.2
+                    size_hint_y:0.01
+                    GridLayout:
+                        cols: 2
+                        BoxLayout:
+                            size_hint_x:0.8
+                        MDIconButton:
+                            icon:'school'
+                            on_release: app.display_alphabet_chart()
+                BoxLayout:
+                    size_hint_y:0.19
 
                 #Card displaying random Georgian letter
                 MDCard:

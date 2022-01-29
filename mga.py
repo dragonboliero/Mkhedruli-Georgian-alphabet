@@ -4,6 +4,7 @@ version - 1.3 - doesn't play sound.
 To do list:
             *Letters learning screen:
                 - Record all sounds for Georgian letters.
+                - Better format alphabet chart MDDialog.
             *Time attack screen:
             *Transcription screen:
                 - Find a way to show to the user that space is 
@@ -16,6 +17,8 @@ To do list:
             *Achievements:
                 - Create tiles, based on MDCards, for achievements 
                   in all modes.
+                - Write a separate function for saving new achievement 
+                  datato file.
             *Other: 
                 - Make it so that language name changes 
                   on all spinners.
@@ -222,6 +225,7 @@ class Mkhedruli(MDApp):
         self.number_learned_letters = int(self.achievements_status['achievement_letters'][0])
         #Variable holding all learned letters
         self.learned_letters = self.achievements_status['achievement_letters'][1]
+        #Change status of Letter Learning mode achievement tiles in Achievements screen
         self.achievement_ll1_notclickable = True
         if int(self.achievements_status['achievement_letters'][0]) >= 10:
             self.achievement_ll1_notclickable = False
@@ -240,6 +244,22 @@ class Mkhedruli(MDApp):
         app_uix = Builder.load_file('mga.kv')
         return app_uix
 
+    def display_alphabet_chart(self):
+        chart_text=f'''
+[font=../geo_font.ttf] ა [/font] - {georgian_letters_dict['ა'][self.settings['language']]} [font=../geo_font.ttf]  ბ [/font] - {georgian_letters_dict['ბ'][self.settings['language']]} [font=../geo_font.ttf]  გ [/font] - {georgian_letters_dict['გ'][self.settings['language']]}
+[font=../geo_font.ttf] დ [/font] - {georgian_letters_dict['დ'][self.settings['language']]} [font=../geo_font.ttf]  ე [/font] - {georgian_letters_dict['ე'][self.settings['language']]} [font=../geo_font.ttf]  ვ [/font] - {georgian_letters_dict['ვ'][self.settings['language']]}
+[font=../geo_font.ttf] ზ [/font] - {georgian_letters_dict['ზ'][self.settings['language']]} [font=../geo_font.ttf]  თ [/font] - {georgian_letters_dict['თ'][self.settings['language']]} [font=../geo_font.ttf]  ი [/font] - {georgian_letters_dict['ი'][self.settings['language']]}
+[font=../geo_font.ttf] კ [/font] - {georgian_letters_dict['კ'][self.settings['language']]} [font=../geo_font.ttf]  ლ [/font] - {georgian_letters_dict['ლ'][self.settings['language']]} [font=../geo_font.ttf]  მ [/font] - {georgian_letters_dict['მ'][self.settings['language']]}
+[font=../geo_font.ttf] ნ [/font] - {georgian_letters_dict['ნ'][self.settings['language']]} [font=../geo_font.ttf]  ო [/font] - {georgian_letters_dict['ო'][self.settings['language']]} [font=../geo_font.ttf]  პ [/font] - {georgian_letters_dict['პ'][self.settings['language']]}
+[font=../geo_font.ttf] ჟ [/font] - {georgian_letters_dict['ჟ'][self.settings['language']]} [font=../geo_font.ttf]  რ [/font] - {georgian_letters_dict['რ'][self.settings['language']]} [font=../geo_font.ttf]  ს [/font] - {georgian_letters_dict['ს'][self.settings['language']]}
+[font=../geo_font.ttf] ტ [/font] - {georgian_letters_dict['ტ'][self.settings['language']]} [font=../geo_font.ttf]  უ [/font] - {georgian_letters_dict['უ'][self.settings['language']]} [font=../geo_font.ttf]  ფ [/font] - {georgian_letters_dict['ფ'][self.settings['language']]}
+[font=../geo_font.ttf] ქ [/font] - {georgian_letters_dict['ქ'][self.settings['language']]} [font=../geo_font.ttf]  ღ [/font] - {georgian_letters_dict['ღ'][self.settings['language']]} [font=../geo_font.ttf]  ყ [/font] - {georgian_letters_dict['ყ'][self.settings['language']]}
+[font=../geo_font.ttf] შ [/font] - {georgian_letters_dict['შ'][self.settings['language']]} [font=../geo_font.ttf]  ჩ [/font] - {georgian_letters_dict['ჩ'][self.settings['language']]} [font=../geo_font.ttf]  ც [/font] - {georgian_letters_dict['ც'][self.settings['language']]}
+[font=../geo_font.ttf] ძ [/font] - {georgian_letters_dict['ძ'][self.settings['language']]} [font=../geo_font.ttf]  წ [/font] - {georgian_letters_dict['წ'][self.settings['language']]} [font=../geo_font.ttf]  ჭ [/font] - {georgian_letters_dict['ჭ'][self.settings['language']]}
+[font=../geo_font.ttf] ხ [/font] - {georgian_letters_dict['ხ'][self.settings['language']]} [font=../geo_font.ttf]  ჯ [/font] - {georgian_letters_dict['ჯ'][self.settings['language']]} [font=../geo_font.ttf]  ჰ [/font] - {georgian_letters_dict['ჰ'][self.settings['language']]}
+        '''
+        chart_dialog = MDDialog(title=self.language_strings['app_name'][self.settings['language']],text=chart_text)
+        chart_dialog.open()
 
     #Function for changing language settings in the app
     def change_language(self, lang):
@@ -661,35 +681,37 @@ class Mkhedruli(MDApp):
         achievement_info = MDDialog(title=achievement_texts[name][self.settings['language']][0],text=achievement_texts[name][self.settings['language']][1])
         achievement_info.open()
     
+    #Method for checking conditions required to unlock achievements in Letter Learning mode
     def check_achievement_letters(self,letter):
-        """ print(self.learned_letters)
-        print(self.number_learned_letters) """
+        #If the correctly provided letters is not yet in the list
         if letter not in self.learned_letters:
+            #Add it to the list
             self.learned_letters = self.learned_letters + letter
             self.achievements_status['achievement_letters'][1] = self.learned_letters
+            #Increase number of correctly provided letters
             self.number_learned_letters +=1
             self.achievements_status['achievement_letters'][0] = str(self.number_learned_letters)
+            #If the first achievement is unlocked
             if self.number_learned_letters == 10:
                 achievement_letters_contrats = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_ll1'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_ll1'][self.settings['language']][1])
                 achievement_letters_contrats.open()
                 self.root.get_screen('MainMenu').ids.achievement_ll1.disabled = False
+            #If the second achievement is unlocked
             if self.number_learned_letters == 20:
                 achievement_letters_contrats = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_ll2'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_ll2'][self.settings['language']][1])
                 achievement_letters_contrats.open()
                 self.root.get_screen('MainMenu').ids.achievement_ll2.disabled = False
+            #If the third achievement is unlocked
             if self.number_learned_letters == 33:
                 achievement_letters_contrats = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_ll3'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_ll3'][self.settings['language']][1])
                 achievement_letters_contrats.open()
                 self.achievement_ll3_notclickable = False
                 self.root.get_screen('MainMenu').ids.achievement_ll3.disabled = False
+            #Update file with current data
             with open('data/achievement_status.csv','w',encoding='utf8') as new_achievements_status:
                 for achievement_name,values in self.achievements_status.items():
                     new_status = f'{achievement_name},{values[0]},{values[1]}\n'
                     new_achievements_status.write(new_status)
-        print('after')
-        print(self.learned_letters)
-        print(self.number_learned_letters)
-
 
     #Method for checking conditions required to achieve history achievement.
     def check_achievement_history(self,tile_name):
