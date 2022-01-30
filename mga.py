@@ -244,6 +244,7 @@ class Mkhedruli(MDApp):
         app_uix = Builder.load_file('mga.kv')
         return app_uix
 
+    #Method displaying letters of Georgian alphabet with corresponding user's native language equivalents
     def display_alphabet_chart(self):
         chart_text=f'''
 [font=../geo_font.ttf] ა [/font] - {georgian_letters_dict['ა'][self.settings['language']]} [font=../geo_font.ttf]  ბ [/font] - {georgian_letters_dict['ბ'][self.settings['language']]} [font=../geo_font.ttf]  გ [/font] - {georgian_letters_dict['გ'][self.settings['language']]}
@@ -681,6 +682,13 @@ class Mkhedruli(MDApp):
         achievement_info = MDDialog(title=achievement_texts[name][self.settings['language']][0],text=achievement_texts[name][self.settings['language']][1])
         achievement_info.open()
     
+    #Method saving status of achievements to achievement_status.csv file
+    def save_achievements_status(self):
+        with open('data/achievement_status.csv','w',encoding='utf8') as new_achievements_status:
+                for achievement_name,values in self.achievements_status.items():
+                    new_status = f'{achievement_name},{values[0]},{values[1]}\n'
+                    new_achievements_status.write(new_status)
+
     #Method for checking conditions required to unlock achievements in Letter Learning mode
     def check_achievement_letters(self,letter):
         #If the correctly provided letters is not yet in the list
@@ -708,10 +716,7 @@ class Mkhedruli(MDApp):
                 self.achievement_ll3_notclickable = False
                 self.root.get_screen('MainMenu').ids.achievement_ll3.disabled = False
             #Update file with current data
-            with open('data/achievement_status.csv','w',encoding='utf8') as new_achievements_status:
-                for achievement_name,values in self.achievements_status.items():
-                    new_status = f'{achievement_name},{values[0]},{values[1]}\n'
-                    new_achievements_status.write(new_status)
+            self.save_achievements_status()
 
     #Method for checking conditions required to achieve history achievement.
     def check_achievement_history(self,tile_name):
@@ -738,10 +743,7 @@ class Mkhedruli(MDApp):
                 achievement_history_congrats.open()
                 self.root.get_screen('MainMenu').ids.achievement_history.disabled = False
         #Save the achievement status to file
-        with open('data/achievement_status.csv','w',encoding='utf8') as new_achievements_status:
-            for achievement_name,values in self.achievements_status.items():
-                new_status = f'{achievement_name},{values[0]},{values[1]}\n'
-                new_achievements_status.write(new_status)
+        self.save_achievements_status()
                 
     def test(self):
         print("It's working")
