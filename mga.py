@@ -17,8 +17,6 @@ To do list:
             *Achievements:
                 - Create tiles, based on MDCards, for achievements 
                   in all modes.
-                - Write a separate function for saving new achievement 
-                  datato file.
             *Other: 
                 - Make it so that language name changes 
                   on all spinners.
@@ -235,6 +233,11 @@ class Mkhedruli(MDApp):
         self.achievement_ll3_notclickable = True
         if int(self.achievements_status['achievement_letters'][0]) == 33:
             self.achievement_ll3_notclickable = False
+
+        #Change status of Time Attack mode achievement tiles in Achievement screen
+        self.achievement_ta1_notclickable = True
+        if int(self.achievements_status['achievement_time_attack'][0]) >= 1:
+            self.achievement_ta1_notclickable = False
 
         #Setting up 'clickability' of achievement tiles in Achievement screen
         self.achievement_history_notclickable = True
@@ -503,6 +506,7 @@ class Mkhedruli(MDApp):
             {self.language_strings['perc_ca_ta'][self.settings['language']]}{percent_correct:.2f}
             """)
             display_run_stats.open()
+            self.check_achievement_ta()
             #Reset correct answers score and number of answers
             self.answer_streak_score_ta = 0
             self.all_answers_ta = 0
@@ -717,6 +721,15 @@ class Mkhedruli(MDApp):
                 self.root.get_screen('MainMenu').ids.achievement_ll3.disabled = False
             #Update file with current data
             self.save_achievements_status()
+
+    def check_achievement_ta(self):
+        if self.answer_streak_score_ta >= 10 and self.achievements_status['achievement_time_attack'][0] == '0':
+            self.achievements_status['achievement_time_attack'][0] = '1'
+            achievement_time_attack_10 = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_ta1'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_ta1'][self.settings['language']][1])
+            achievement_time_attack_10.open()
+            self.root.get_screen('MainMenu').ids.achievement_ta1.disabled = False
+            self.save_achievements_status()
+
 
     #Method for checking conditions required to achieve history achievement.
     def check_achievement_history(self,tile_name):
