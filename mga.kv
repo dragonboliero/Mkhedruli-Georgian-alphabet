@@ -519,7 +519,7 @@ SManager:
                         size_hint_x:0.02
                     MDCard:
                         id:bg_two
-                        md_bg_color: (0.11,0.99,0.01,1)
+                        md_bg_color: (0.11,0.85,0.98,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
                         on_release:app.select_color(self.md_bg_color);app.save_settings()
@@ -528,7 +528,7 @@ SManager:
                         size_hint_x:0.02
                     MDCard:
                         id:bg_three
-                        md_bg_color: (0.01,0.64,0.98,1)
+                        md_bg_color: (0.97,0.11,0.98,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
                         on_release:app.select_color(self.md_bg_color);app.save_settings()
@@ -537,7 +537,7 @@ SManager:
                         size_hint_x:0.02
                     MDCard:
                         id:bg_four
-                        md_bg_color: (0.99,0.01,0.21,1)
+                        md_bg_color: (0.22,0.04,0.04,1)
                         radius: [dp(25),dp(25),dp(25),dp(25)]
                         opacity:0
                         on_release:app.select_color(self.md_bg_color);app.save_settings()
@@ -663,10 +663,12 @@ SManager:
                         on_release:app.display_achievement_info('achievement_ta1');
                     AchievementCard:
                         id:achievement_ta2
+                        disabled:app.achievement_ta2_notclickable
                         label_text:app.achievement_strings['achievement_ta2'][app.current_lng][0]
                         on_release:app.display_achievement_info('achievement_ta2');
                     AchievementCard:
                         id:achievement_ta3
+                        disabled:app.achievement_ta3_notclickable
                         label_text:app.achievement_strings['achievement_ta3'][app.current_lng][0]
                         on_release:app.display_achievement_info('achievement_ta3');
                     AchievementCard:

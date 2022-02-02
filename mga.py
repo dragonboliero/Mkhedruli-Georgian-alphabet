@@ -238,6 +238,12 @@ class Mkhedruli(MDApp):
         self.achievement_ta1_notclickable = True
         if int(self.achievements_status['achievement_time_attack'][0]) >= 1:
             self.achievement_ta1_notclickable = False
+        self.achievement_ta2_notclickable = True
+        if int(self.achievements_status['achievement_time_attack'][0]) >= 2:
+            self.achievement_ta2_notclickable = False
+        self.achievement_ta3_notclickable = True
+        if int(self.achievements_status['achievement_time_attack'][0]) >= 3:
+            self.achievement_ta3_notclickable = False
 
         #Setting up 'clickability' of achievement tiles in Achievement screen
         self.achievement_history_notclickable = True
@@ -596,8 +602,8 @@ class Mkhedruli(MDApp):
 
     #Color of MDCards for choosing color in settings screen
     def tiles_background_colors(self,bg_type):
-        tiles_bg = [(0.98,0.73,0.01,1),(0.11,0.99,0.01,1),(0.01,0.64,0.98,1),(0.99,0.01,0.21,1)]
-        screen_bg = [(0.31,0.39,0.2,1),(0.31,0.24,0.78,1),(0.99,0.2,0.41,1)]
+        tiles_bg = [(0.98,0.73,0.01,1),(0.11,0.85,0.98,1),(0.97,0.11,0.98,1),(0.22,0.04,0.04,1)]
+        screen_bg = [(0.82,0.26,0.1,1),(0.31,0.24,0.78,1),(0.99,0.2,0.41,1)]
         
         if bg_type == 'tile':
             self.root.get_screen('MainMenu').ids.bg_one.md_bg_color = tiles_bg[0]
@@ -722,14 +728,29 @@ class Mkhedruli(MDApp):
             #Update file with current data
             self.save_achievements_status()
 
+    #Method for checking conditions required to unlock achievements in Time Attack mode
     def check_achievement_ta(self):
+        #Achievement for 10 correct answers in Time Attack mode
         if self.answer_streak_score_ta >= 10 and self.achievements_status['achievement_time_attack'][0] == '0':
             self.achievements_status['achievement_time_attack'][0] = '1'
             achievement_time_attack_10 = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_ta1'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_ta1'][self.settings['language']][1])
             achievement_time_attack_10.open()
             self.root.get_screen('MainMenu').ids.achievement_ta1.disabled = False
             self.save_achievements_status()
-
+        #Achievement for 20 correct answers in Time Attack mode
+        if self.answer_streak_score_ta >= 20 and self.achievements_status['achievement_time_attack'][0] == '1':
+            self.achievements_status['achievement_time_attack'][0] = '2'
+            achievement_time_attack_20 = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_ta2'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_ta2'][self.settings['language']][1])
+            achievement_time_attack_20.open()
+            self.root.get_screen('MainMenu').ids.achievement_ta2.disabled = False
+            self.save_achievements_status()
+        #Achievement for 30 correct answers in Time Attack mode
+        if self.answer_streak_score_ta >= 20 and self.achievements_status['achievement_time_attack'][0] == '2':
+            self.achievements_status['achievement_time_attack'][0] = '3'
+            achievement_time_attack_30 = MDDialog(title=self.language_strings['achievement_unlocked'][self.settings['language']],text=achievement_texts['achievement_ta3'][self.settings['language']][0] + '\n\n' + achievement_texts['achievement_ta3'][self.settings['language']][1])
+            achievement_time_attack_30.open()
+            self.root.get_screen('MainMenu').ids.achievement_ta3.disabled = False
+            self.save_achievements_status()            
 
     #Method for checking conditions required to achieve history achievement.
     def check_achievement_history(self,tile_name):
