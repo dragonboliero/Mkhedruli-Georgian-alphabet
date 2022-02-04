@@ -33,7 +33,7 @@ def load_transcription_texts():
 
 def load_achievements():
     achievements = {}
-    with open('data/achievements.csv','r') as raw_achievements:
+    with open('data/achievements.csv','r',encoding='utf-8') as raw_achievements:
         csv_data = csv.reader(raw_achievements)
         for row in csv_data:
             name,achievement_name_en,achievement_name_pl,achievement_name_ru,text_en,text_pl,text_ru = row
@@ -43,7 +43,7 @@ def load_achievements():
 
 def load_achievements_status():
     achievements_status = {}
-    with open('data/achievement_status.csv','r') as raw_achievements_status:
+    with open('data/achievement_status.csv','r',encoding='utf-8') as raw_achievements_status:
         csv_data = csv.reader(raw_achievements_status)
         for row in csv_data:
             achievement_name,status,condition_counter = row
