@@ -266,9 +266,13 @@ SManager:
             BoxLayout:
                 orientation:'vertical'                    
                 size_hint_y:0.8
-                GridLayout:
-                    size_hint_y:0.2
-                    cols:3
+                
+                MDCard:
+                    size_hint_y:0.04
+                    size_hint_x:0.9
+                    radius: [dp(25),dp(25),dp(25),dp(25)]
+                    md_bg_color: app.default_card_color
+                    elevation:30
                     MDLabel:
                         id: timer
                         text:app.time_attack_initial
@@ -285,6 +289,9 @@ SManager:
                     MDLabel:
                         id:answer_streak_ta
                         text:app.answer_streak_string_ta
+                BoxLayout:
+                    orientation:'vertical'                    
+                    size_hint_y:0.18
                 #Card displaying random Georgian letter
                 MDCard:
                     id:geo_letter_ta_card
@@ -361,8 +368,12 @@ SManager:
             BoxLayout:
                 orientation:'vertical'                    
                 size_hint_y:0.9
-                GridLayout:
-                    rows:5
+                MDCard:
+                    size_hint_y:0.04
+                    size_hint_x:0.9
+                    radius: [dp(25),dp(25),dp(25),dp(25)]
+                    md_bg_color: app.default_card_color
+                    elevation:30
                     GridLayout:
                         cols: 2
                         size_hint_y:0.1
@@ -438,11 +449,17 @@ SManager:
             BoxLayout:
                 orientation:'vertical'                    
                 size_hint_y:0.8
-                MDLabel:
-                    id:screen_title_alph
-                    text:app.language_strings['title_alph'][app.settings['language']]
+                MDCard:
                     size_hint_y:0.02
-                    halign:'center'
+                    size_hint_x:0.8
+                    radius: [dp(25),dp(25),dp(25),dp(25)]
+                    md_bg_color: app.default_card_color
+                    elevation:30
+                    MDLabel:
+                        id:screen_title_alph
+                        text:app.language_strings['title_alph'][app.settings['language']]
+                        #size_hint_y:0.02
+                        halign:'center'
                 MDGridLayout:
                     size_hint_y:0.2
                     rows: 2
