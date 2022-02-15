@@ -14,9 +14,6 @@ To do list:
             *History of Georgian alphabets screen:
                 - Collect data and write texts corresponding to
                   MDLabels.
-            *Achievements:
-                - Create tiles, based on MDCards, for achievements 
-                  in all modes.
             *Other: 
                 - Make it so that language name changes 
                   on all spinners.
