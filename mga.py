@@ -25,6 +25,7 @@ To do list:
 '''
 
 
+from logging import root
 from kivymd.app import MDApp
 from kivy.lang.builder import Builder
 from kivy.uix.screenmanager  import Screen,ScreenManager
@@ -38,12 +39,14 @@ from kivy.clock import Clock
 import data_loader as dl
 import random
 from playsound import playsound
+import locale
 
 load_strings = dl.load_lang_data()
 load_settings = dl.load_settings()
 transcription_texts = dl.load_transcription_texts()
 achievement_texts = dl.load_achievements()
 achievement_status = dl.load_achievements_status()
+
 
 georgian_letters_dict = {
 'ა':{'en':'a','pl':'a','ru':'а'},'ბ':{'en':'b','pl':'b','ru':'б'},
@@ -104,6 +107,7 @@ class MainMenu(Screen):
 #Main app
 class Mkhedruli(MDApp):
     def build(self):  
+        print(locale.getlocale())
         #Font with Georgian letters
         self.geo_font = '../geo_font.ttf'
         #Variable holding app settings
@@ -129,7 +133,7 @@ class Mkhedruli(MDApp):
         #Value used in settings screen and Time Attack mode for displaying duration time in minutes
         self.ta_minutes_value = int(int(self.settings['duration'])/60)
         #String used in settings screen for Time Attack duration label
-        self.ta_default_duration = self.language_strings['ta_duration'][self.settings['language']] + str(self.ta_minutes_value)+':00'
+        self.ta_default_duration = self.language_strings['ta_duration'][self.settings['language']] + '\n'+ str(self.ta_minutes_value)+':00'
         #String for tiles background setting in settings screen.
         self.tile_bg_color = self.language_strings['tile_bg_color'][self.settings['language']]
         #String for screen background setting in settings screen
@@ -163,7 +167,7 @@ class Mkhedruli(MDApp):
         #Time Attack clock object
         self.time_attack_clock = 0
         #Initial Time Attack correct answers string
-        self.answer_streak_string_ta = self.language_strings['correct_answers_ta'][self.settings['language']] + ' 0' 
+        self.answer_streak_string_ta = self.language_strings['correct_answers_ta'][self.settings['language']] + '\n' + ' 0' 
         #Variable for storing whether it's the first quiz in Time Attack mode
         self.first_run_ta = False
         #Initial numer of correct answers in Time Attack mode
@@ -171,7 +175,8 @@ class Mkhedruli(MDApp):
         #Total number of answers in one run of Time Attack game
         self.all_answers_ta = 0
         #Time attack initial text
-        self.time_attack_initial = self.language_strings['time_left'][self.settings['language']] + str(self.ta_minutes_value)+':00'
+        self.ta_init_txt = self.language_strings['time_left'][self.settings['language']].split(" ")
+        self.time_attack_initial = self.ta_init_txt[0] + " " + self.ta_init_txt[1] + "\n" + str(self.ta_minutes_value)+':00'
         #Read screen background color from file and convert it from str to float
         screen_bg_color_values = self.settings['screen_bg_color_val'].split(',')
         float_screen_bg_color_values = [float(x) for x in screen_bg_color_values]
@@ -251,19 +256,20 @@ class Mkhedruli(MDApp):
         return app_uix
 
     #Method displaying letters of Georgian alphabet with corresponding user's native language equivalents
-    def display_alphabet_chart(self):
-        chart_text=f'''[b]
-[font=../geo_font.ttf]ა[/font] - {georgian_letters_dict['ა'][self.settings['language']]}    [font=../geo_font.ttf]ბ[/font] - {georgian_letters_dict['ბ'][self.settings['language']]}        [font=../geo_font.ttf]  გ [/font] - {georgian_letters_dict['გ'][self.settings['language']]}
-[font=../geo_font.ttf]დ[/font] - {georgian_letters_dict['დ'][self.settings['language']]}    [font=../geo_font.ttf]ე[/font] - {georgian_letters_dict['ე'][self.settings['language']]}        [font=../geo_font.ttf]  ვ [/font] - {georgian_letters_dict['ვ'][self.settings['language']]}
-[font=../geo_font.ttf]ზ[/font] - {georgian_letters_dict['ზ'][self.settings['language']]}    [font=../geo_font.ttf]  თ [/font] - {georgian_letters_dict['თ'][self.settings['language']]}     [font=../geo_font.ttf]  ი [/font] - {georgian_letters_dict['ი'][self.settings['language']]}
-[font=../geo_font.ttf]კ[/font] - {georgian_letters_dict['კ'][self.settings['language']]}    [font=../geo_font.ttf]  ლ [/font] - {georgian_letters_dict['ლ'][self.settings['language']]}     [font=../geo_font.ttf]  მ [/font] - {georgian_letters_dict['მ'][self.settings['language']]}
-[font=../geo_font.ttf]ნ[/font] - {georgian_letters_dict['ნ'][self.settings['language']]}    [font=../geo_font.ttf]  ო [/font] - {georgian_letters_dict['ო'][self.settings['language']]}     [font=../geo_font.ttf]  პ [/font] - {georgian_letters_dict['პ'][self.settings['language']]}
-[font=../geo_font.ttf]ჟ[/font] - {georgian_letters_dict['ჟ'][self.settings['language']]}    [font=../geo_font.ttf]  რ [/font] - {georgian_letters_dict['რ'][self.settings['language']]}     [font=../geo_font.ttf]  ს [/font] - {georgian_letters_dict['ს'][self.settings['language']]}
-[font=../geo_font.ttf]ტ[/font] - {georgian_letters_dict['ტ'][self.settings['language']]}    [font=../geo_font.ttf]  უ [/font] - {georgian_letters_dict['უ'][self.settings['language']]}     [font=../geo_font.ttf]  ფ [/font] - {georgian_letters_dict['ფ'][self.settings['language']]}
-[font=../geo_font.ttf]ქ[/font] - {georgian_letters_dict['ქ'][self.settings['language']]}    [font=../geo_font.ttf]  ღ [/font] - {georgian_letters_dict['ღ'][self.settings['language']]}     [font=../geo_font.ttf]  ყ [/font] - {georgian_letters_dict['ყ'][self.settings['language']]}
-[font=../geo_font.ttf]შ[/font] - {georgian_letters_dict['შ'][self.settings['language']]}    [font=../geo_font.ttf]  ჩ [/font] - {georgian_letters_dict['ჩ'][self.settings['language']]}     [font=../geo_font.ttf]  ც [/font] - {georgian_letters_dict['ც'][self.settings['language']]}
-[font=../geo_font.ttf]ძ[/font] - {georgian_letters_dict['ძ'][self.settings['language']]}    [font=../geo_font.ttf]  წ [/font] - {georgian_letters_dict['წ'][self.settings['language']]}     [font=../geo_font.ttf]  ჭ [/font] - {georgian_letters_dict['ჭ'][self.settings['language']]}
-[font=../geo_font.ttf]ხ[/font] - {georgian_letters_dict['ხ'][self.settings['language']]}    [font=../geo_font.ttf]  ჯ [/font] - {georgian_letters_dict['ჯ'][self.settings['language']]}     [font=../geo_font.ttf]  ჰ [/font] - {georgian_letters_dict['ჰ'][self.settings['language']]}[/b]'''
+    def display_alphabet_chart(self,font_size):
+        f_size = int(font_size)
+        chart_text=f'''[size={f_size}][b]
+[font=data/geo_font.ttf]ა[/font] - {georgian_letters_dict['ა'][self.settings['language']]}    [font=data/geo_font.ttf]ბ[/font] - {georgian_letters_dict['ბ'][self.settings['language']]}        [font=data/geo_font.ttf]  გ [/font] - {georgian_letters_dict['გ'][self.settings['language']]}
+[font=data/geo_font.ttf]დ[/font] - {georgian_letters_dict['დ'][self.settings['language']]}    [font=data/geo_font.ttf]ე[/font] - {georgian_letters_dict['ე'][self.settings['language']]}        [font=data/geo_font.ttf]  ვ [/font] - {georgian_letters_dict['ვ'][self.settings['language']]}
+[font=data/geo_font.ttf]ზ[/font] - {georgian_letters_dict['ზ'][self.settings['language']]}    [font=data/geo_font.ttf]  თ [/font] - {georgian_letters_dict['თ'][self.settings['language']]}     [font=data/geo_font.ttf]  ი [/font] - {georgian_letters_dict['ი'][self.settings['language']]}
+[font=data/geo_font.ttf]კ[/font] - {georgian_letters_dict['კ'][self.settings['language']]}    [font=data/geo_font.ttf]  ლ [/font] - {georgian_letters_dict['ლ'][self.settings['language']]}     [font=data/geo_font.ttf]  მ [/font] - {georgian_letters_dict['მ'][self.settings['language']]}
+[font=data/geo_font.ttf]ნ[/font] - {georgian_letters_dict['ნ'][self.settings['language']]}    [font=data/geo_font.ttf]  ო [/font] - {georgian_letters_dict['ო'][self.settings['language']]}     [font=data/geo_font.ttf]  პ [/font] - {georgian_letters_dict['პ'][self.settings['language']]}
+[font=data/geo_font.ttf]ჟ[/font] - {georgian_letters_dict['ჟ'][self.settings['language']]}    [font=data/geo_font.ttf]  რ [/font] - {georgian_letters_dict['რ'][self.settings['language']]}     [font=data/geo_font.ttf]  ს [/font] - {georgian_letters_dict['ს'][self.settings['language']]}
+[font=data/geo_font.ttf]ტ[/font] - {georgian_letters_dict['ტ'][self.settings['language']]}    [font=data/geo_font.ttf]  უ [/font] - {georgian_letters_dict['უ'][self.settings['language']]}     [font=data/geo_font.ttf]  ფ [/font] - {georgian_letters_dict['ფ'][self.settings['language']]}
+[font=data/geo_font.ttf]ქ[/font] - {georgian_letters_dict['ქ'][self.settings['language']]}    [font=data/geo_font.ttf]  ღ [/font] - {georgian_letters_dict['ღ'][self.settings['language']]}     [font=data/geo_font.ttf]  ყ [/font] - {georgian_letters_dict['ყ'][self.settings['language']]}
+[font=data/geo_font.ttf]შ[/font] - {georgian_letters_dict['შ'][self.settings['language']]}    [font=data/geo_font.ttf]  ჩ [/font] - {georgian_letters_dict['ჩ'][self.settings['language']]}     [font=data/geo_font.ttf]  ც [/font] - {georgian_letters_dict['ც'][self.settings['language']]}
+[font=data/geo_font.ttf]ძ[/font] - {georgian_letters_dict['ძ'][self.settings['language']]}    [font=data/geo_font.ttf]  წ [/font] - {georgian_letters_dict['წ'][self.settings['language']]}     [font=data/geo_font.ttf]  ჭ [/font] - {georgian_letters_dict['ჭ'][self.settings['language']]}
+[font=data/geo_font.ttf]ხ[/font] - {georgian_letters_dict['ხ'][self.settings['language']]}    [font=data/geo_font.ttf]  ჯ [/font] - {georgian_letters_dict['ჯ'][self.settings['language']]}     [font=data/geo_font.ttf]  ჰ [/font] - {georgian_letters_dict['ჰ'][self.settings['language']]}[/b][/size]'''
         chart_dialog = MDDialog(title=self.language_strings['app_name'][self.settings['language']],text=chart_text)
         chart_dialog.open()
 
@@ -281,12 +287,13 @@ class Mkhedruli(MDApp):
 
         #Time Attack screen
         self.root.get_screen('MainMenu').ids.apptitle_ta.text = self.language_strings['app_name'][self.settings['language']]
-        self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(self.time_attack_seconds)
+        self.ta_init_txt = self.language_strings['time_left'][self.settings['language']].split(" ")
+        self.root.get_screen('MainMenu').ids.timer.text = self.ta_init_txt[0] + " " + self.ta_init_txt[1] + "\n" + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ":00"
         self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.settings['language']] + ' ' + str(self.answer_streak_score_ta)
 
         #Transcription mode
         self.root.get_screen('MainMenu').ids.apptitle_trans.text=self.language_strings['app_name'][self.settings['language']]
-        self.root.get_screen('MainMenu').ids.streak_trans.text=self.answer_streak_string_ta = self.language_strings['correct_answers_ta'][self.settings['language']]+ str(self.trans_score)
+        self.root.get_screen('MainMenu').ids.streak_trans.text=self.answer_streak_string_ta = self.language_strings['correct_answers_ta'][self.settings['language']]+ '\n' + str(self.trans_score)
         self.root.get_screen('MainMenu').ids.percentage_trans.text=self.language_strings['perc_ca_ta'][self.settings['language']] + str(self.trans_percentage)
 
         #History of Georgian alphabets
@@ -469,7 +476,7 @@ class Mkhedruli(MDApp):
         except:
             print('Clock not running')
         minutes = str(int(int(self.settings['duration']) / 60))
-        self.root.get_screen('MainMenu').ids.timer.text =  self.language_strings['time_left'][self.settings['language']] + minutes + ':00'
+        self.root.get_screen('MainMenu').ids.timer.text =  self.ta_init_txt[0] + " " + self.ta_init_txt[1] + "\n" + minutes + ':00'
         self.root.get_screen('MainMenu').ids.answer_streak_ta.text = self.language_strings['correct_answers_ta'][self.settings['language']] + '0'
         self.pick_georgian_letter(1)
 
@@ -486,6 +493,7 @@ class Mkhedruli(MDApp):
     #Method returning value of time left in Time Attack mode
     def CallbackClock(self,dt):
         if self.time_attack_seconds > 0:
+            self.root.get_screen('MainMenu').ids.time_value.disabled = True
             self.time_attack_seconds -=1
             time_modulo = self.time_attack_seconds % 60
             minutes = str(int((self.time_attack_seconds - time_modulo) / 60))
@@ -493,8 +501,10 @@ class Mkhedruli(MDApp):
                 seconds = '0' + str(time_modulo)
             else:
                 seconds = str(time_modulo)
-            self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + minutes + ':' + seconds
+            timer_text = self.language_strings['time_left'][self.settings['language']].split(" ")
+            self.root.get_screen('MainMenu').ids.timer.text = timer_text[0] + " " + timer_text[1] + "\n" + minutes + ':' + seconds
         else:
+            self.root.get_screen('MainMenu').ids.time_value.disabled = False
             self.counting_down = False
             self.time_attack_clock.cancel()
             self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
@@ -517,7 +527,7 @@ class Mkhedruli(MDApp):
     #Method swapping current MDLabel time value with slider value in Time Attack mode
     def ConvertTimeSliderValueToSeconds(self):
         if self.counting_down == False:
-            self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
+            self.root.get_screen('MainMenu').ids.timer.text = self.ta_init_txt[0] + " " + self.ta_init_txt[1] + "\n" + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
             self.time_attack_seconds = int(int(self.root.get_screen('MainMenu').ids.time_value.value) * 60)
 
     #Method for resetting values in Transcription mode
@@ -554,12 +564,13 @@ class Mkhedruli(MDApp):
                 
     #Method for displaying MDDialog with information about alphabets in Georgian alphabets'
     #history screen
-    def history_screen_dialog(self,card_name,card_text):
-        dialog_text = f"""
+    def history_screen_dialog(self,card_name,card_text,font_size):
+        f_size = int(font_size)
+        dialog_text = f"""[size={f_size}]
 {self.language_strings[card_name][self.settings['language']]}
 
 {self.language_strings[card_text][self.settings['language']]}
-        """
+        [/size]"""
         info_dialog = MDDialog(text=dialog_text,radius=[20,7,20,7])
         info_dialog.open()
 
@@ -575,7 +586,7 @@ class Mkhedruli(MDApp):
         #Label text
         self.root.get_screen('MainMenu').ids.timer.text = self.language_strings['time_left'][self.settings['language']] + str(int(self.root.get_screen('MainMenu').ids.time_value.value)) + ':00'
         #Change text displayed in settings menu
-        self.ta_default_duration = self.language_strings['ta_duration'][self.settings['language']] + str(self.ta_minutes_value)+':00'
+        self.ta_default_duration = self.language_strings['ta_duration'][self.settings['language']] + "\n" + str(self.ta_minutes_value)+':00'
         self.root.get_screen('MainMenu').ids.time_attack_duration_time.text = self.ta_default_duration
         #Change value that will be saved in settings.csv file
         self.settings['duration'] = self.ta_minutes_value * 60
@@ -650,12 +661,19 @@ class Mkhedruli(MDApp):
             self.root.get_screen('MainMenu').ids.third_letter.md_bg_color = color
             self.root.get_screen('MainMenu').ids.fourth_letter.md_bg_color = color
             #Time Atack mode
+            self.root.get_screen('MainMenu').ids.ta_options.md_bg_color = color
             self.root.get_screen('MainMenu').ids.geo_letter_ta_card.md_bg_color = color
+            #Transcription mode 
+            self.root.get_screen('MainMenu').ids.transcription_stats.md_bg_color = color
+            self.root.get_screen('MainMenu').ids.transcription_text_card.md_bg_color = color
             #History of Georgian alphabets screen
+            self.root.get_screen('MainMenu').ids.history_screen_label.md_bg_color = color
             self.root.get_screen('MainMenu').ids.alph_general.md_bg_color = color
             self.root.get_screen('MainMenu').ids.alph_asomtavruli.md_bg_color = color
             self.root.get_screen('MainMenu').ids.alph_nuskhuri.md_bg_color = color
             self.root.get_screen('MainMenu').ids.alph_mkhedruli.md_bg_color = color
+            #Settings screen
+            self.root.get_screen('MainMenu').ids.settings_card.md_bg_color = color
             #Achievements screen
             self.root.get_screen('MainMenu').ids.achievement_ll1.md_bg_color = color
             self.root.get_screen('MainMenu').ids.achievement_ll2.md_bg_color = color
@@ -684,8 +702,9 @@ class Mkhedruli(MDApp):
             self.root.get_screen('MainMenu').ids.achi_background.md_bg_color = color
     
     #Displays achievement name and description in MDDialog when clicked in achievements screen
-    def display_achievement_info(self,name):
-        achievement_info = MDDialog(title=achievement_texts[name][self.settings['language']][0],text=achievement_texts[name][self.settings['language']][1])
+    def display_achievement_info(self,name,font_size):
+        f_size = int(font_size)
+        achievement_info = MDDialog(title= f'[size={f_size}]' + achievement_texts[name][self.settings['language']][0] + '[/size]',text=f'[size={f_size}]'+achievement_texts[name][self.settings['language']][1] + '[/size]')
         achievement_info.open()
     
     #Method saving status of achievements to achievement_status.csv file
@@ -775,7 +794,8 @@ class Mkhedruli(MDApp):
         #Save the achievement status to file
         self.save_achievements_status()
                 
-    def test(self):
-        print("It's working")
+    def test(self,type):
+        print(type)
 
 Mkhedruli().run()
+

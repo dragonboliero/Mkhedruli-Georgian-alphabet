@@ -41,6 +41,7 @@ SManager:
     MDLabel:
         text:root.label_text
         halign:'center'
+        font_size:self.width/5.5
 
 <AchievementCard@MDCard>:
     id:achcard
@@ -57,6 +58,7 @@ SManager:
     MDLabel:
         text:root.label_text
         halign:'center'
+        font_size:self.width/10
 
 
 <MainMenu>
@@ -66,6 +68,7 @@ SManager:
         MDBottomNavigationItem:
             name:'letters'
             icon:'alphabetical'
+            on_tab_release: app.pick_georgian_letter(0)
             ScreenBackground:
                 id:ll_background
             TopPanel:
@@ -76,6 +79,7 @@ SManager:
                     size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
+                    font_size:self.width/10
                 #Dropdown list with available languages
                 Spinner:
                     id:languages
@@ -92,16 +96,16 @@ SManager:
                 orientation:'vertical'
                 size_hint_y:0.8
                 BoxLayout:
-                    size_hint_y:0.01
-                    GridLayout:
-                        cols: 2
-                        BoxLayout:
-                            size_hint_x:0.8
-                        MDIconButton:
-                            icon:'school'
-                            on_release: app.display_alphabet_chart()
+                    size_hint_y:0.15
+                    BoxLayout:
+                        size_hint_x:0.99
+                    MDIconButton:
+                        icon:'school'
+                        halign:'right'
+                        user_font_size: root.width/10
+                        on_release: app.display_alphabet_chart(self.width/7.5)
                 BoxLayout:
-                    size_hint_y:0.19
+                    size_hint_y:0.05
 
                 #Card displaying random Georgian letter
                 MDCard:
@@ -142,6 +146,7 @@ SManager:
                     MDIconButton:
                         icon:'arrow-right-thick'
                         pos_hint:{'center_x':0.5}
+                        user_font_size: root.width/10
                         on_release:app.pick_georgian_letter(0)
                     BoxLayout:
                         size_hint_x:0.2
@@ -253,6 +258,7 @@ SManager:
                     size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
+                    font_size:self.width/10
                 #Dropdown list with available languages
                 Spinner:
                     id:languages_ta
@@ -265,10 +271,13 @@ SManager:
                     on_text: app.change_language(languages_ta.text);app.save_settings()
             BoxLayout:
                 orientation:'vertical'                    
-                size_hint_y:0.8
-                
+                size_hint_y:0.9
+                BoxLayout:
+                    size_hint_y:0.01
                 MDCard:
-                    size_hint_y:0.04
+                    id: ta_options
+                    pos_hint:{'center_x':0.5}
+                    size_hint_y:0.1
                     size_hint_x:0.9
                     radius: [dp(25),dp(25),dp(25),dp(25)]
                     md_bg_color: app.default_card_color
@@ -276,19 +285,26 @@ SManager:
                     MDLabel:
                         id: timer
                         text:app.time_attack_initial
+                        font_size:self.width/8
+                        halign:"center"
                     ModifiedSlider:
                         id:time_value
                         min:1
                         max:5.99
                         value:app.ta_minutes_value
                         hint:True
+                        cursor_height:root.height/30
+                        cursor_width:root.height/30
                         hint_text_color:(1,0,0,1)
-                        size_hint:(0.5,root.height)
-                        pos_hint:{'center_x':0.5,'center_y':0.7}
+                        size_hint:(1,1)
+                        pos_hint:{'center_x':0.5,'center_y':0.5}
                         on_release: app.ConvertTimeSliderValueToSeconds()
+                        disabled:False
                     MDLabel:
                         id:answer_streak_ta
                         text:app.answer_streak_string_ta
+                        font_size:self.width/8
+                        halign:"center"
                 BoxLayout:
                     orientation:'vertical'                    
                     size_hint_y:0.18
@@ -321,6 +337,7 @@ SManager:
                     MDIconButton:
                         icon:'arrow-right-thick'
                         pos_hint:{'center_x':0.5}
+                        user_font_size: root.width/10
                         on_release:app.check_answer(root.ids.geo_letter_ta.text,root.ids.TimeAttackAnswer.text,0,1);app.pick_georgian_letter(1);app.TimeAttackClock()
                     BoxLayout:
                         size_hint_x:0.2
@@ -355,6 +372,7 @@ SManager:
                     size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
+                    font_size:self.width/10
                 #Dropdown list with available languages
                 Spinner:
                     id:languages_trans
@@ -365,60 +383,90 @@ SManager:
                     halign:'center'
                     values:'English - en','język polski - pl','русский язык - ru'
                     on_text: app.change_language(languages_trans.text);app.save_settings()
+            
             BoxLayout:
                 orientation:'vertical'                    
                 size_hint_y:0.9
+                #Spacer between top bar and card with statistics
+                BoxLayout:
+                    size_hint_y:0.01
+                #MDCard with mode statistics
                 MDCard:
-                    size_hint_y:0.04
+                    id:transcription_stats
+                    pos_hint:{'center_x':0.5}
+                    size_hint_y:0.1
                     size_hint_x:0.9
                     radius: [dp(25),dp(25),dp(25),dp(25)]
                     md_bg_color: app.default_card_color
                     elevation:30
                     GridLayout:
-                        cols: 2
-                        size_hint_y:0.1
+                        cols: 3
                         MDLabel:   
                             id:streak_trans
                             text:app.answer_streak_string_ta
+                            font_size:self.width/10
                             halign:'center'
+                            markup:True
+                        BoxLayout:
+                            size_hint_x:0.05
                         MDLabel:
                             id:percentage_trans
                             text:app.trans_percentage_string
+                            font_size:self.width/10
+                            halign:'center'
+                            markup:True
+                #Spacer between stats MDCard and text to transcribe
+                BoxLayout:
+                    size_hint_y:0.20
+                MDCard:
+                    id:transcription_text_card
+                    pos_hint:{'center_x':0.5}
+                    size_hint_y:0.1
+                    size_hint_x:0.9
+                    radius: [dp(25),dp(25),dp(25),dp(25)]
+                    md_bg_color: app.default_card_color
+                    elevation:30
                     Label:
                         id:trans_text
                         text: app.current_transcription_line
-                        size_hint_y:0.1
-                        font_size:'22sp'
+                        font_size:self.width/20.25
                         halign:'center'
                         markup:True
                         #Not included in the repo
                         #Georgian fonts can be found at:
                         #https://fonts.google.com/
                         font_name:app.geo_font
+                #Spacer above the arrow key
+                BoxLayout:
+                    size_hint_y:0.02
+                #Layout holding arrow key
+                BoxLayout:
+                    size_hint_y:0.03
                     BoxLayout:
-                        size_hint_y:0.03
-                        BoxLayout:
-                            size_hint_x:0.4
-                        MDIconButton:
-                            icon:'arrow-right-thick'
-                            pos_hint:{'center_x':0.5}
-                            on_release:app.check_answer(app.trans_current_letter,root.ids.trans_answer.text,0,2);app.HighlightTransLetter()
-                            halign:'center'
-                        BoxLayout:
-                            size_hint_x:0.4
+                        size_hint_x:0.4
+                    MDIconButton:
+                        icon:'arrow-right-thick'
+                        user_font_size: root.width/10
+                        pos_hint:{'center_x':0.5}
+                        on_release:app.check_answer(app.trans_current_letter,root.ids.trans_answer.text,0,2);app.HighlightTransLetter()
+                        halign:'center'
                     BoxLayout:
-                        size_hint_y:0.04
-                        BoxLayout:
-                            size_hint_x:0.4
-                        MDTextFieldRound:
-                            id:trans_answer
-                            halign:'center'
-                            size_hint_x:0.2
-                            on_text_validate:app.check_answer(app.trans_current_letter,root.ids.trans_answer.text,0,2);app.HighlightTransLetter()
-                        BoxLayout:
-                            size_hint_x:0.4
+                        size_hint_x:0.4
+                #Layout holding text field
+                BoxLayout:
+                    size_hint_y:0.04
                     BoxLayout:
-                        size_hint_y:0.6
+                        size_hint_x:0.4
+                    MDTextFieldRound:
+                        id:trans_answer
+                        halign:'center'
+                        size_hint_x:0.2
+                        on_text_validate:app.check_answer(app.trans_current_letter,root.ids.trans_answer.text,0,2);app.HighlightTransLetter()
+                    BoxLayout:
+                        size_hint_x:0.4
+                #Bottom filler
+                BoxLayout:
+                    size_hint_y:0.03
 
 
 
@@ -436,6 +484,7 @@ SManager:
                     size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
+                    font_size:self.width/10
                 #Dropdown list with available languages
                 Spinner:
                     id:languages_alph
@@ -446,12 +495,19 @@ SManager:
                     halign:'center'
                     values:'English - en','język polski - pl','русский язык - ru'
                     on_text: app.change_language(languages_alph.text);app.save_settings()
+        
             BoxLayout:
                 orientation:'vertical'                    
-                size_hint_y:0.8
+                size_hint_y:0.9
+                #Top spacer
+                BoxLayout:
+                    size_hint_y:0.01
+                #Title card
                 MDCard:
-                    size_hint_y:0.02
-                    size_hint_x:0.8
+                    id:history_screen_label
+                    pos_hint:{'center_x':0.5}
+                    size_hint_y:0.1
+                    size_hint_x:0.9
                     radius: [dp(25),dp(25),dp(25),dp(25)]
                     md_bg_color: app.default_card_color
                     elevation:30
@@ -459,9 +515,13 @@ SManager:
                         id:screen_title_alph
                         text:app.language_strings['title_alph'][app.settings['language']]
                         #size_hint_y:0.02
+                        font_size:self.width/15
                         halign:'center'
+                BoxLayout:
+                    size_hint_y:0.1
+                #Cards with information about Georgian alphabets
                 MDGridLayout:
-                    size_hint_y:0.2
+                    #size_hint_y:0.66
                     rows: 2
                     cols:2
                     spacing: dp(20)
@@ -469,19 +529,19 @@ SManager:
                     AlphaCard:
                         id:alph_general
                         label_text:app.language_strings['gen_alph'][app.settings['language']]
-                        on_release:app.history_screen_dialog('gen_alph','gen_alph_info');app.check_achievement_history('alph_general')
+                        on_release:app.history_screen_dialog('gen_alph','gen_alph_info',self.width/10);app.check_achievement_history('alph_general')
                     AlphaCard:
                         id:alph_asomtavruli
                         label_text:app.language_strings['asomtavruli'][app.settings['language']]
-                        on_release:app.history_screen_dialog('asomtavruli','asomtavruli_info');app.check_achievement_history('alph_asomtavruli')
+                        on_release:app.history_screen_dialog('asomtavruli','asomtavruli_info',self.width/10);app.check_achievement_history('alph_asomtavruli')
                     AlphaCard:
                         id:alph_nuskhuri
                         label_text:app.language_strings['nuskhuri'][app.settings['language']]
-                        on_release:app.history_screen_dialog('nuskhuri','nuskhuri_info');app.check_achievement_history('alph_nuskhuri')
+                        on_release:app.history_screen_dialog('nuskhuri','nuskhuri_info',self.width/10);app.check_achievement_history('alph_nuskhuri')
                     AlphaCard:
                         id:alph_mkhedruli
                         label_text:app.language_strings['mkhedruli'][app.settings['language']]
-                        on_release:app.history_screen_dialog('mkhedruli','mkhedruli_info');app.check_achievement_history('alph_mkhedruli')
+                        on_release:app.history_screen_dialog('mkhedruli','mkhedruli_info',self.width/10);app.check_achievement_history('alph_mkhedruli')
             BoxLayout:
                 size_hint_y:0.07
 
@@ -499,6 +559,7 @@ SManager:
                     size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
+                    font_size:self.width/10
                 #Dropdown list with available languages
                 Spinner:
                     id:languages_settings
@@ -510,13 +571,25 @@ SManager:
                     values:'English - en','język polski - pl','русский язык - ru'
                     on_text: app.change_language(languages_settings.text);app.save_settings()
             BoxLayout:
+                size_hint_y:0.01
+            BoxLayout:
                 orientation:'vertical'                    
-                size_hint_y:0.8
-                MDLabel:
-                    id:settings_title
-                    text:app.settings_title
-                    size_hint_y:0.02
-                    halign:'center'
+                size_hint_y:0.87
+                size_hint_x:0.95
+                pos_hint:{'center_x':0.5}
+                MDCard:
+                    id:settings_card
+                    pos_hint:{'center_x':0.5}
+                    size_hint_y:0.1
+                    size_hint_x:0.9
+                    radius: [dp(25),dp(25),dp(25),dp(25)]
+                    md_bg_color: app.default_card_color
+                    elevation:30
+                    MDLabel:
+                        id:settings_title
+                        text:app.settings_title
+                        font_size:self.width/10
+                        halign:'center'
                 BoxLayout:
                     size_hint_y:0.04
                 #Grid with colors available to choose for tiles backround
@@ -569,6 +642,7 @@ SManager:
                     MDLabel:
                         id:voice_label
                         text:app.language_strings['voice'][app.settings['language']]
+                        font_size:self.width/10
                     Switch:
                         id:voice_switch
                         active:app.voice_switch_state
@@ -577,16 +651,21 @@ SManager:
                     MDLabel:
                         id:time_attack_duration_time
                         text:app.ta_default_duration
+                        font_size:self.width/10
                     ModifiedSlider:
                         id:settings_time_value
                         min:1
                         max:5.99
+                        cursor_height:root.height/30
+                        cursor_width:root.height/30
                         value:app.ta_minutes_value
                         on_release:app.change_time_attack_duration_values();app.save_settings()
+                        
                     #Tiles background color
                     MDLabel:
                         id:letter_tiles_bg_color
                         text:app.tile_bg_color
+                        font_size:self.width/10
                     BoxLayout:
                         orientation:'vertical'
                         BoxLayout:
@@ -598,13 +677,14 @@ SManager:
                                 id:current_tile_bg_color
                                 md_bg_color: app.default_card_color
                                 radius: [dp(25),dp(25),dp(25),dp(25)]
-                                on_release:app.colors_visible('tile');
+                                on_release:app.colors_visible('tile')
                         BoxLayout:
                             size_hint:(1,0.2)
                     #Screen background color
                     MDLabel:
                         id:screen_bg_color_set_label
                         text:app.screen_bg_color_string
+                        font_size:self.width/10
                     BoxLayout:
                         orientation:'vertical'
                         BoxLayout:
@@ -616,7 +696,7 @@ SManager:
                                 id:current_screen_bg_color
                                 md_bg_color: app.screen_background_color
                                 radius: [dp(25),dp(25),dp(25),dp(25)]
-                                on_release:app.colors_visible('screen');
+                                on_release:app.colors_visible('screen')
                         BoxLayout:
                             size_hint:(1,0.2)
 
@@ -637,6 +717,7 @@ SManager:
                     size_hint:(0.6,0.1)
                     pos_hint:{'center_x':0.5,'center_y':0.98}
                     halign:'center'
+                    font_size:self.width/10
                 #Dropdown list with available languages
                 Spinner:
                     id:languages_achievements
@@ -651,60 +732,61 @@ SManager:
                 size_hint_y:0.9
                 do_scroll_y:True
                 GridLayout:
-                    spacing:[0,5]
+                    spacing:[0,40]
                     size:(root.width,root.height)
                     size_hint_x:None
                     size_hint_y:3
-                    padding:[root.width*0.15,root.height*0.01,root.width*0.15,root.height*0.01]
+                    padding:[root.width*0.15,root.height*0.02,root.width*0.15,root.height*0.02]
                     
                     cols:1
                     AchievementCard:
                         id:achievement_ll1
                         disabled:app.achievement_ll1_notclickable
                         label_text:app.achievement_strings['achievement_ll1'][app.current_lng][0]
-                        on_release:app.display_achievement_info('achievement_ll1');
+                        on_release:app.display_achievement_info('achievement_ll1',self.width/15);
                     AchievementCard:
                         id:achievement_ll2
                         disabled:app.achievement_ll2_notclickable
                         label_text:app.achievement_strings['achievement_ll2'][app.current_lng][0]
-                        on_release:app.display_achievement_info('achievement_ll2');
+                        on_release:app.display_achievement_info('achievement_ll2',self.width/15);
                     AchievementCard:
                         id:achievement_ll3
                         disabled:app.achievement_ll3_notclickable
                         label_text:app.achievement_strings['achievement_ll3'][app.current_lng][0]
-                        on_release:app.display_achievement_info('achievement_ll3');
+                        on_release:app.display_achievement_info('achievement_ll3',self.width/15);
                     AchievementCard:
                         id:achievement_ta1
                         disabled:app.achievement_ta1_notclickable
                         label_text:app.achievement_strings['achievement_ta1'][app.current_lng][0]
-                        on_release:app.display_achievement_info('achievement_ta1');
+                        on_release:app.display_achievement_info('achievement_ta1',self.width/15);
                     AchievementCard:
                         id:achievement_ta2
                         disabled:app.achievement_ta2_notclickable
                         label_text:app.achievement_strings['achievement_ta2'][app.current_lng][0]
-                        on_release:app.display_achievement_info('achievement_ta2');
+                        on_release:app.display_achievement_info('achievement_ta2',self.width/15);
                     AchievementCard:
                         id:achievement_ta3
                         disabled:app.achievement_ta3_notclickable
                         label_text:app.achievement_strings['achievement_ta3'][app.current_lng][0]
-                        on_release:app.display_achievement_info('achievement_ta3');
+                        on_release:app.display_achievement_info('achievement_ta3',self.width/15);
                     AchievementCard:
                         id:achievement_trans1
                         label_text:app.achievement_strings['achievement_trans1'][app.current_lng][0]
-                        on_release:app.display_achievement_info('achievement_trans1');
+                        on_release:app.display_achievement_info('achievement_trans1',self.width/15);
                     AchievementCard:
                         id:achievement_trans2
                         label_text:app.achievement_strings['achievement_trans2'][app.current_lng][0]
-                        on_release:app.display_achievement_info('achievement_trans2');
+                        on_release:app.display_achievement_info('achievement_trans2',self.width/15);
                     AchievementCard:
                         id:achievement_trans3
                         label_text:app.achievement_strings['achievement_trans3'][app.current_lng][0]
-                        on_release:app.display_achievement_info('achievement_trans3');
+                        on_release:app.display_achievement_info('achievement_trans3',self.width/15);
                     AchievementCard:
                         id:achievement_history
                         disabled: app.achievement_history_notclickable
                         label_text:app.achievement_strings['achievement_history'][app.current_lng][0]
-                        on_release:app.display_achievement_info('achievement_history');
+                        on_release:app.display_achievement_info('achievement_history',self.width/15);
 
             BoxLayout:
                 size_hint_y:0.07
+
